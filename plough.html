@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Plough — Millwork Studios</title>
+<link rel="icon" type="image/png" href="assets/logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --paper: #f3f0e9;
+    --paper-2: #ebe7dd;
+    --ink: #111110;
+    --ink-soft: #2a2925;
+    --ink-mute: #7a766c;
+    --ink-faint: #b8b3a6;
+    --rule: rgba(17,17,16,0.12);
+    --sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+    --mono: "Geist Mono", ui-monospace, monospace;
+    --serif: "Instrument Serif", "Times New Roman", serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--paper); color: var(--ink);
+    font-family: var(--sans); font-weight: 400; line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+  ::selection { background: var(--ink); color: var(--paper); }
+
+  body::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1;
+    background-image:
+      radial-gradient(rgba(17,17,16,0.025) 1px, transparent 1px),
+      radial-gradient(rgba(17,17,16,0.02) 1px, transparent 1px);
+    background-size: 3px 3px, 7px 7px;
+    mix-blend-mode: multiply; opacity: 0.6;
+  }
+
+  .container { max-width: 1280px; margin: 0 auto; padding: 0 32px; }
+  .kicker {
+    font-family: var(--mono); font-size: 11px; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-mute);
+  }
+  em.serif { font-family: var(--serif); font-style: italic; font-weight: 400; letter-spacing: -0.01em; }
+
+  /* nav */
+  nav.top {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    padding: 18px 32px;
+    background: rgba(243,240,233,0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--rule);
+  }
+  nav.top .inner {
+    max-width: 1440px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  nav.top a.brand { display: flex; align-items: center; gap: 10px; font-weight: 500; font-size: 15px; letter-spacing: -0.01em; }
+  nav.top .back {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--ink-mute);
+    transition: color 0.2s ease;
+  }
+  nav.top .back:hover { color: var(--ink); }
+
+  section { position: relative; z-index: 2; }
+
+  /* hero */
+  .hero { padding: 140px 0 100px; border-bottom: 1px solid var(--rule); }
+  .hero .grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: end;
+  }
+  .hero h1 {
+    font-family: var(--sans); font-weight: 400;
+    font-size: clamp(64px, 9vw, 152px);
+    line-height: 0.92; letter-spacing: -0.045em;
+  }
+  .hero h1 em.serif { font-size: 0.95em; }
+  .hero .meta-grid {
+    margin-top: 56px;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
+    padding-top: 28px; border-top: 1px solid var(--rule);
+  }
+  .meta-cell .label { color: var(--ink-mute); }
+  .meta-cell .value { margin-top: 8px; font-size: 14px; color: var(--ink); }
+  .lede {
+    font-family: var(--sans); font-weight: 400;
+    font-size: clamp(20px, 1.5vw, 24px);
+    line-height: 1.45; letter-spacing: -0.012em;
+    color: var(--ink-soft); max-width: 38ch;
+  }
+  .lede em.serif { font-size: 1.04em; }
+  .cta-row { margin-top: 36px; display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 22px; font-size: 14px; font-weight: 500;
+    border: 1px solid var(--ink); transition: all 0.25s ease; cursor: pointer;
+  }
+  .btn-dark { background: var(--ink); color: var(--paper); }
+  .btn-dark:hover { background: transparent; color: var(--ink); }
+  .btn-ghost { background: transparent; color: var(--ink); border-color: var(--rule); }
+  .btn-ghost:hover { border-color: var(--ink); }
+
+  /* feature mock — task list visual */
+  .mock {
+    margin-top: 100px;
+    background: var(--ink); color: var(--paper);
+    padding: 56px; position: relative; overflow: hidden;
+  }
+  .mock-frame {
+    background: var(--paper); color: var(--ink);
+    border-radius: 12px; overflow: hidden;
+    box-shadow: 0 30px 60px -20px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.05) inset;
+    max-width: 1100px; margin: 0 auto;
+  }
+  .mock-titlebar {
+    display: flex; align-items: center; gap: 8px;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--rule);
+    background: var(--paper-2);
+  }
+  .dot { width: 11px; height: 11px; border-radius: 50%; background: #d6cfbf; }
+  .mock-body { display: grid; grid-template-columns: 220px 1fr; min-height: 460px; }
+  .mock-side {
+    background: var(--paper-2);
+    border-right: 1px solid var(--rule);
+    padding: 22px 18px;
+    font-size: 13px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .side-section { color: var(--ink-mute); font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; margin: 14px 6px 6px; }
+  .side-item { padding: 7px 10px; border-radius: 6px; color: var(--ink-soft); display: flex; justify-content: space-between; }
+  .side-item.active { background: var(--ink); color: var(--paper); }
+  .side-item .count { opacity: 0.55; font-family: var(--mono); font-size: 11px; }
+  .mock-main { padding: 28px 32px; }
+  .mock-h {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 22px;
+  }
+  .mock-h h3 { font-weight: 400; font-size: 22px; letter-spacing: -0.015em; }
+  .mock-h .date { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: var(--ink-mute); text-transform: uppercase; }
+  .task {
+    display: grid; grid-template-columns: 24px 1fr 80px 90px 80px;
+    align-items: center; gap: 14px;
+    padding: 14px 4px; border-bottom: 1px solid var(--rule);
+    font-size: 14px;
+  }
+  .task .check {
+    width: 17px; height: 17px; border-radius: 50%; border: 1.5px solid var(--ink-mute);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .task.done .check { background: var(--ink); border-color: var(--ink); }
+  .task.done .check::after {
+    content: ""; width: 8px; height: 4px;
+    border-left: 1.5px solid var(--paper); border-bottom: 1.5px solid var(--paper);
+    transform: rotate(-45deg) translate(1px, -1px);
+  }
+  .task.done .title { color: var(--ink-mute); text-decoration: line-through; text-decoration-thickness: 1px; }
+  .task .tag {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--ink-mute);
+    padding: 3px 8px; border: 1px solid var(--rule); justify-self: start;
+  }
+  .task .owner { font-family: var(--mono); font-size: 11px; color: var(--ink-mute); letter-spacing: 0.08em; }
+  .task .due { font-family: var(--mono); font-size: 11px; color: var(--ink-mute); letter-spacing: 0.08em; text-align: right; }
+
+  /* features */
+  .features { padding: 140px 0; border-bottom: 1px solid var(--rule); }
+  .features .head {
+    display: grid; grid-template-columns: 1fr 1.4fr; gap: 80px; align-items: end;
+    margin-bottom: 80px;
+  }
+  .features h2 {
+    font-family: var(--sans); font-weight: 400;
+    font-size: clamp(36px, 4.4vw, 64px);
+    line-height: 1.02; letter-spacing: -0.03em;
+  }
+  .feat-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid var(--rule);
+  }
+  .feat {
+    padding: 36px 28px 36px 0;
+    border-right: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .feat:last-child { border-right: none; }
+  .feat:nth-child(3n) { border-right: none; }
+  .feat .num {
+    font-family: var(--serif); font-style: italic; font-size: 18px; color: var(--ink-mute);
+    margin-bottom: 24px;
+  }
+  .feat h3 { font-size: 19px; font-weight: 500; letter-spacing: -0.005em; margin-bottom: 8px; }
+  .feat p { font-size: 14.5px; color: var(--ink-mute); line-height: 1.55; }
+
+  /* pricing strip */
+  .pricing {
+    padding: 120px 0 140px;
+    background: var(--paper-2);
+    border-bottom: 1px solid var(--rule);
+  }
+  .pricing-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+  }
+  .plan {
+    background: var(--paper); padding: 40px 32px 36px;
+    display: flex; flex-direction: column; gap: 20px;
+  }
+  .plan.featured { background: var(--ink); color: var(--paper); }
+  .plan h4 { font-size: 22px; font-weight: 400; letter-spacing: -0.015em; }
+  .plan .price { font-family: var(--sans); font-weight: 400; font-size: 52px; letter-spacing: -0.03em; line-height: 1; }
+  .plan .price .per { font-size: 13px; color: var(--ink-mute); letter-spacing: 0; margin-left: 4px; }
+  .plan.featured .price .per { color: rgba(243,240,233,0.6); }
+  .plan ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .plan li { font-size: 14px; color: var(--ink-soft); display: flex; align-items: flex-start; gap: 10px; }
+  .plan.featured li { color: rgba(243,240,233,0.85); }
+  .plan li::before {
+    content: ""; width: 10px; height: 1px; background: currentColor; opacity: 0.5;
+    margin-top: 11px; flex-shrink: 0;
+  }
+
+  /* footer */
+  footer.bot {
+    padding: 60px 0 36px;
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-mute);
+  }
+  footer.bot .inner { display: flex; justify-content: space-between; align-items: center; }
+
+  @media (max-width: 900px) {
+    .hero .grid, .features .head { grid-template-columns: 1fr; gap: 32px; }
+    .hero .meta-grid { grid-template-columns: repeat(2, 1fr); }
+    .feat-grid, .pricing-grid { grid-template-columns: 1fr; }
+    .feat:nth-child(3n) { border-right: 1px solid var(--rule); }
+    .mock-body { grid-template-columns: 1fr; }
+    .mock-side { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <div class="inner">
+    <a class="brand" href="index.html">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6">
+        <path d="M9 22 L10.2 13 L13.8 13 L15 22 Z" fill="currentColor" stroke="none"></path>
+        <path d="M10.2 13 Q12 10 13.8 13 Z" fill="currentColor" stroke="none"></path>
+        <line x1="12" y1="11.5" x2="5" y2="4.5"></line>
+        <line x1="12" y1="11.5" x2="19" y2="4.5"></line>
+        <line x1="12" y1="11.5" x2="5" y2="18.5"></line>
+        <line x1="12" y1="11.5" x2="19" y2="18.5"></line>
+        <circle cx="12" cy="11.5" r="1.2" fill="currentColor" stroke="none"></circle>
+      </svg>
+      <span>Millwork Studios</span>
+    </a>
+    <a class="back" href="index.html">← Back to studio</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="container">
+    <div class="kicker">Product 01 — Plough · v0.4 · Private beta</div>
+    <div style="height: 36px;"></div>
+    <div class="grid">
+      <h1>
+        Plough<em class="serif">.</em>
+      </h1>
+      <div>
+        <p class="lede">
+          A patient task manager for the small and medium businesses that grow <em class="serif">one furrow at a time</em>. Plough turns the daily list into a record of progress — quietly, without ceremony.
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-dark" href="#">Request beta access →</a>
+          <a class="btn btn-ghost" href="#features">See how it works</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="meta-grid">
+      <div class="meta-cell">
+        <div class="kicker label">Built for</div>
+        <div class="value">Teams of 3 to 80</div>
+      </div>
+      <div class="meta-cell">
+        <div class="kicker label">Platforms</div>
+        <div class="value">Web, macOS, iOS</div>
+      </div>
+      <div class="meta-cell">
+        <div class="kicker label">Pricing</div>
+        <div class="value">From €9 / seat / month</div>
+      </div>
+      <div class="meta-cell">
+        <div class="kicker label">Status</div>
+        <div class="value">Private beta — Q3 2026</div>
+      </div>
+    </div>
+
+    <!-- product visual mock -->
+    <div class="mock">
+      <div class="mock-frame">
+        <div class="mock-titlebar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span style="margin-left: 14px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute);">Plough — Forno Bertelli · Today</span>
+        </div>
+        <div class="mock-body">
+          <aside class="mock-side">
+            <div class="side-section">Today</div>
+            <div class="side-item active"><span>The list</span><span class="count">7</span></div>
+            <div class="side-item"><span>Calendar</span><span class="count">3</span></div>
+            <div class="side-item"><span>Inbox</span><span class="count">12</span></div>
+
+            <div class="side-section">Furrows</div>
+            <div class="side-item"><span>Bakery</span><span class="count">22</span></div>
+            <div class="side-item"><span>Wholesale</span><span class="count">8</span></div>
+            <div class="side-item"><span>Renovation</span><span class="count">14</span></div>
+
+            <div class="side-section">Team</div>
+            <div class="side-item"><span>Anna</span><span class="count">4</span></div>
+            <div class="side-item"><span>Marco</span><span class="count">5</span></div>
+            <div class="side-item"><span>Giulia</span><span class="count">3</span></div>
+          </aside>
+
+          <main class="mock-main">
+            <div class="mock-h">
+              <h3>The list <em class="serif" style="color: var(--ink-mute);">— Monday</em></h3>
+              <span class="date">11 May 2026 · 7 open</span>
+            </div>
+
+            <div class="task done">
+              <div class="check"></div>
+              <div class="title">Order rye flour — 60kg</div>
+              <span class="tag">Bakery</span>
+              <span class="owner">Anna</span>
+              <span class="due">Done 07:14</span>
+            </div>
+            <div class="task">
+              <div class="check"></div>
+              <div class="title">Call the carpenter about counter height</div>
+              <span class="tag">Renovation</span>
+              <span class="owner">Marco</span>
+              <span class="due">By 11:00</span>
+            </div>
+            <div class="task">
+              <div class="check"></div>
+              <div class="title">Reply to Cascina Verde — wholesale terms</div>
+              <span class="tag">Wholesale</span>
+              <span class="owner">Giulia</span>
+              <span class="due">Today</span>
+            </div>
+            <div class="task">
+              <div class="check"></div>
+              <div class="title">Photograph new pastry case for the menu</div>
+              <span class="tag">Bakery</span>
+              <span class="owner">Anna</span>
+              <span class="due">Today</span>
+            </div>
+            <div class="task done">
+              <div class="check"></div>
+              <div class="title">Confirm Friday delivery window</div>
+              <span class="tag">Wholesale</span>
+              <span class="owner">Giulia</span>
+              <span class="due">Done 08:02</span>
+            </div>
+            <div class="task">
+              <div class="check"></div>
+              <div class="title">Draft May newsletter — “bread of the season”</div>
+              <span class="tag">Marketing</span>
+              <span class="owner">Marco</span>
+              <span class="due">Wed</span>
+            </div>
+            <div class="task" style="border-bottom: none;">
+              <div class="check"></div>
+              <div class="title">Pay the electrician’s second invoice</div>
+              <span class="tag">Renovation</span>
+              <span class="owner">You</span>
+              <span class="due">Fri</span>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features" id="features">
+  <div class="container">
+    <div class="head">
+      <div>
+        <div class="kicker">What it does</div>
+      </div>
+      <h2>
+        Built for the work that <em class="serif">comes back tomorrow</em>.
+      </h2>
+    </div>
+
+    <div class="feat-grid">
+      <div class="feat">
+        <div class="num">i.</div>
+        <h3>Furrows, not folders</h3>
+        <p>Group work by the rhythm it actually has — by season, by client, by quiet recurring routine. Plough doesn’t pretend everything is a project.</p>
+      </div>
+      <div class="feat">
+        <div class="num">ii.</div>
+        <h3>One list, every day</h3>
+        <p>Your team opens to a single morning list. What’s due, what’s overdue, what’s growing. No dashboards, no widgets.</p>
+      </div>
+      <div class="feat">
+        <div class="num">iii.</div>
+        <h3>Quiet handovers</h3>
+        <p>When someone’s away, their furrow keeps moving. Reassignments leave a paper trail; nobody has to ask twice.</p>
+      </div>
+      <div class="feat">
+        <div class="num">iv.</div>
+        <h3>The miller’s ledger</h3>
+        <p>Every closed task becomes a line in your studio’s ledger — a calm, searchable record of what got done and by whom.</p>
+      </div>
+      <div class="feat">
+        <div class="num">v.</div>
+        <h3>Offline, by default</h3>
+        <p>Plough works in the back of a bakery, on a building site, on the train. Sync resumes when you’re back in range.</p>
+      </div>
+      <div class="feat">
+        <div class="num">vi.</div>
+        <h3>Your data, your mill</h3>
+        <p>Export everything as Markdown or CSV at any time. Self-hosting available on the Atelier plan.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pricing">
+  <div class="container">
+    <div style="display: flex; justify-content: space-between; align-items: end; margin-bottom: 56px; gap: 48px; flex-wrap: wrap;">
+      <div>
+        <div class="kicker">Pricing</div>
+        <h2 style="font-family: var(--sans); font-weight: 400; font-size: clamp(36px, 4.4vw, 64px); line-height: 1.02; letter-spacing: -0.03em; margin-top: 28px;">
+          Three plans, <em class="serif">honestly priced</em>.
+        </h2>
+      </div>
+      <p style="max-width: 360px; font-size: 15px; line-height: 1.55; color: var(--ink-mute);">
+        No per-seat surprises. No feature held hostage. Cancel any month — your ledger is yours to keep.
+      </p>
+    </div>
+
+    <div class="pricing-grid">
+      <div class="plan">
+        <h4>Apprentice</h4>
+        <div class="price">€9<span class="per">/ seat · month</span></div>
+        <ul>
+          <li>Up to 5 seats</li>
+          <li>Unlimited furrows</li>
+          <li>The list & calendar</li>
+          <li>Markdown & CSV export</li>
+        </ul>
+        <a class="btn btn-ghost" href="#" style="margin-top: auto;">Start free →</a>
+      </div>
+      <div class="plan featured">
+        <h4>Miller</h4>
+        <div class="price">€16<span class="per">/ seat · month</span></div>
+        <ul>
+          <li>Unlimited seats</li>
+          <li>The miller’s ledger</li>
+          <li>Quiet handovers</li>
+          <li>Priority support, by post</li>
+        </ul>
+        <a class="btn" style="background: var(--paper); color: var(--ink); border-color: var(--paper); margin-top: auto;" href="#">Request beta →</a>
+      </div>
+      <div class="plan">
+        <h4>Atelier</h4>
+        <div class="price">€39<span class="per">/ seat · month</span></div>
+        <ul>
+          <li>Self-hosting included</li>
+          <li>Custom furrow templates</li>
+          <li>SSO & audit log</li>
+          <li>Quarterly studio visit</li>
+        </ul>
+        <a class="btn btn-ghost" href="#" style="margin-top: auto;">Talk to us →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="bot">
+  <div class="container inner">
+    <span>© 2026 Millwork Studios S.r.l. — Plough is a Millwork product.</span>
+    <a href="index.html">← Back to studio</a>
+  </div>
+</footer>
+
+</body>
+</html>

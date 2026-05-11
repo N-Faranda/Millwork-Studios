@@ -1,0 +1,136 @@
+// Italian / English dictionary
+const I18N = {
+  en: {
+    nav: { products: "Products", studio: "Studio", contact: "Contact" },
+    hero: {
+      kicker: "Millwork Studios · est. 2025 · Independent software studio",
+      h1a: "We build",
+      h1b: "patient tools",
+      h1c: "for the",
+      h1d: "long work",
+      h1e: "of small businesses.",
+      sub: "A studio of engineering turning the quiet, repetitive work of a company into software that grows with it.",
+      hint: "Move your cursor — the wind moves with you.",
+    },
+    manifesto: {
+      kicker: "01 — Studio",
+      h2a: "Software, ",
+      h2b: "milled slowly,",
+      h2c: " is software that lasts.",
+      body: [
+        "Millwork Studios is a small, independent software studio. We choose few problems and we stay with them.",
+        "We are interested in the unglamorous parts of running a small business — the lists, the handovers, the days that look like the day before. We think these are worth building for, carefully.",
+        "Our products are made to grow at the speed of the people who use them. Not faster, not slower.",
+      ],
+      pillars: [
+        { n: "i.", t: "Patient", d: "We design for the second year of use, not the first week." },
+        { n: "ii.", t: "Honest", d: "No dark patterns, no upsells dressed as features." },
+        { n: "iii.", t: "Owned", d: "Bootstrapped. Independent. Answerable only to the people who use our tools." },
+      ],
+    },
+    products: {
+      kicker: "02 — Products",
+      h2a: "One product, ",
+      h2b: "made well.",
+      sub: "",
+      soon: "In the mill",
+      enter: "Open",
+    },
+    plough: {
+      title: "Plough",
+      tag: "Task management, milled for small teams.",
+      desc: "A patient task manager for the small and medium businesses that grow one furrow at a time. Plough turns the daily list into a record of progress — quietly, without ceremony.",
+      meta: ["v0.4 · Private beta", "Web, macOS, iOS"],
+    },
+    contact: {
+      kicker: "03 — Contact",
+      h2a: "Write to the ",
+      h2b: "miller.",
+      body: "We answer everything that comes through this address. Pitches, questions, weather reports.",
+      email: "support.millworkstudios@gmail.com",
+      addrLabel: "Studio",
+      addr: ["Via dei Mulini, 14", "20121 Milano, Italy"],
+      hoursLabel: "Hours",
+      hours: ["Mon–Fri, 19:00 — 22:00 CET", "Closed when it rains hard."],
+    },
+    footer: {
+      tag: "Independent software studio. Milled in Italy.",
+      colA: "Studio",
+      colAitems: ["Manifesto", "Press", "Careers"],
+      colB: "Products",
+      colBitems: ["Plough"],
+      colC: "Elsewhere",
+      colCitems: ["Instagram"],
+      copyright: "© 2026 Millwork Studios S.r.l.",
+    },
+  },
+  it: {
+    nav: { products: "Prodotti", studio: "Studio", contact: "Contatti" },
+    hero: {
+      kicker: "Millwork Studios · fondato 2025 · Studio software indipendente",
+      h1a: "Costruiamo",
+      h1b: "strumenti pazienti",
+      h1c: "per il",
+      h1d: "lavoro lungo",
+      h1e: "delle piccole imprese.",
+      sub: "Uno studio di ingegneria che trasforma il lavoro silenzioso e ripetitivo di un’azienda in software che cresce con lei.",
+      hint: "Muovi il cursore — il vento si muove con te.",
+    },
+    manifesto: {
+      kicker: "01 — Studio",
+      h2a: "Il software ",
+      h2b: "macinato lentamente",
+      h2c: " è il software che dura.",
+      body: [
+        "Millwork Studios è un piccolo studio software indipendente. Scegliamo pochi problemi e ci restiamo dentro.",
+        "Ci interessano le parti meno appariscenti di un’impresa — le liste, i passaggi di consegne, le giornate che assomigliano a quella prima. Crediamo che valga la pena costruirci sopra, con cura.",
+        "I nostri prodotti crescono alla velocità delle persone che li usano. Non più veloci, non più lenti.",
+      ],
+      pillars: [
+        { n: "i.", t: "Pazienti", d: "Progettiamo per il secondo anno d’uso, non per la prima settimana." },
+        { n: "ii.", t: "Onesti", d: "Niente dark pattern, niente upsell travestiti da feature." },
+        { n: "iii.", t: "Indipendenti", d: "Autofinanziati. Rispondiamo solo a chi usa i nostri strumenti." },
+      ],
+    },
+    products: {
+      kicker: "02 — Prodotti",
+      h2a: "Un prodotto, ",
+      h2b: "fatto bene.",
+      sub: "",
+      soon: "Al mulino",
+      enter: "Apri",
+    },
+    plough: {
+      title: "Plough",
+      tag: "Task management, macinato per piccoli team.",
+      desc: "Un task manager paziente per le piccole e medie imprese che crescono un solco alla volta. Plough trasforma la lista quotidiana in un registro di progresso — in silenzio, senza cerimonie.",
+      meta: ["v0.4 · Beta privata", "Web, macOS, iOS"],
+    },
+    contact: {
+      kicker: "03 — Contatti",
+      h2a: "Scrivi al ",
+      h2b: "mugnaio.",
+      body: "Rispondiamo a tutto ciò che arriva a questo indirizzo. Pitch, domande, bollettini meteo.",
+      email: "support.millworkstudios@gmail.com",
+      addrLabel: "Studio",
+      addr: ["Via dei Mulini, 14", "20121 Milano"],
+      hoursLabel: "Orari",
+      hours: ["Lun–Ven, 19:00 — 22:00 CET", "Chiuso quando piove forte."],
+    },
+    footer: {
+      tag: "Studio software indipendente. Macinato in Italia.",
+      colA: "Studio",
+      colAitems: ["Manifesto", "Stampa", "Lavora con noi"],
+      colB: "Prodotti",
+      colBitems: ["Plough"],
+      colC: "Altrove",
+      colCitems: ["Instagram"],
+      copyright: "© 2026 Millwork Studios S.r.l.",
+    },
+  },
+};
+
+const LangCtx = React.createContext({ lang: "en", t: I18N.en, setLang: () => {} });
+const useT = () => React.useContext(LangCtx);
+
+Object.assign(window, { I18N, LangCtx, useT });
