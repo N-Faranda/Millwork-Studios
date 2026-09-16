@@ -39,6 +39,34 @@ const Windmill = ({ size = 520, idleSpin = 0.08 }) => {
     window.addEventListener("mousemove", onMove);
     window.addEventListener("pointermove", onMove);
 
+    // Touch: the browser cancels pointermove once a scroll gesture takes over,
+    // so listen to touchmove directly — dragging (and scrolling) drives the wind.
+    const onTouch = (e) => {
+      const s = stateRef.current;
+      const touch = e.touches && e.touches[0];
+      if (!touch) return;
+      if (!s.hasMouse) {
+        // first contact: no gust, just presence — otherwise the jump from the
+        // previous point reads as an enormous flick
+        s.mx = s.lastMx = touch.clientX;
+        s.my = s.lastMy = touch.clientY;
+      } else {
+        s.lastMx = s.mx;
+        s.lastMy = s.my;
+        s.mx = touch.clientX;
+        s.my = touch.clientY;
+      }
+      s.hasMouse = true;
+    };
+    // the finger leaves the screen — let the wheel coast back down to idle
+    const onTouchEnd = () => {
+      stateRef.current.hasMouse = false;
+    };
+    window.addEventListener("touchstart", onTouch, { passive: true });
+    window.addEventListener("touchmove", onTouch, { passive: true });
+    window.addEventListener("touchend", onTouchEnd, { passive: true });
+    window.addEventListener("touchcancel", onTouchEnd, { passive: true });
+
     let raf;
     const tick = (now) => {
       const s = stateRef.current;
@@ -84,6 +112,10 @@ const Windmill = ({ size = 520, idleSpin = 0.08 }) => {
       cancelAnimationFrame(raf);
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("touchstart", onTouch);
+      window.removeEventListener("touchmove", onTouch);
+      window.removeEventListener("touchend", onTouchEnd);
+      window.removeEventListener("touchcancel", onTouchEnd);
       window.removeEventListener("resize", updateCenter);
       window.removeEventListener("scroll", updateCenter);
     };
@@ -135,8 +167,11 @@ const Windmill = ({ size = 520, idleSpin = 0.08 }) => {
     <div
       ref={wrapRef}
       style={{
+        // never wider than its column — between the tablet and desktop
+        // breakpoints the fixed 560 would otherwise push past the grid track
         width: size,
-        height: size,
+        maxWidth: "100%",
+        aspectRatio: "1 / 1",
         color: "var(--ink)",
         pointerEvents: "none",
         userSelect: "none",

@@ -34,6 +34,7 @@
     font-weight: 400;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
     line-height: 1.5;
     overflow-x: hidden;
   }
@@ -76,7 +77,13 @@
     margin: 0 auto;
     padding: 0 32px;
   }
-  @media (max-width: 720px) { .container { padding: 0 20px; } }
+  @media (max-width: 860px) { .container { padding: 0 24px; } }
+  @media (max-width: 560px) { .container { padding: 0 20px; } }
+
+  /* Touch: replace the default blue tap flash with the paper palette. */
+  @media (hover: none) {
+    a, button { -webkit-tap-highlight-color: rgba(17, 17, 16, 0.06); }
+  }
 
   .splash {
     position: fixed; inset: 0;
@@ -110,6 +117,7 @@
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 
 <script type="text/babel" src="src/i18n.jsx"></script>
+<script type="text/babel" src="src/responsive.jsx"></script>
 <script type="text/babel" src="src/windmill.jsx"></script>
 <script type="text/babel" src="src/particles.jsx"></script>
 <script type="text/babel" src="src/ascii.jsx"></script>

@@ -11,6 +11,7 @@ const I18N = {
       h1e: "of small businesses.",
       sub: "A studio of engineering turning the quiet, repetitive work of a company into software that grows with it.",
       hint: "Move your cursor — the wind moves with you.",
+      hintTouch: "Drag across the mill — the wind follows your finger.",
     },
     manifesto: {
       kicker: "01 — Studio",
@@ -25,22 +26,22 @@ const I18N = {
       pillars: [
         { n: "i.", t: "Patient", d: "We design for the second year of use, not the first week." },
         { n: "ii.", t: "Honest", d: "No dark patterns, no upsells dressed as features." },
-        { n: "iii.", t: "Owned", d: "Bootstrapped. Independent. Answerable only to the people who use our tools." },
+        { n: "iii.", t: "Owned", d: "Independent and founder-led — whoever runs the studio is also the one at the bench." },
       ],
     },
     products: {
       kicker: "02 — Products",
       h2a: "One product, ",
       h2b: "made well.",
-      sub: "",
+      sub: "Plough is the first product to leave the studio. Alongside it we build enterprise software on commission — the same bench, a different order.",
       soon: "In the mill",
       enter: "Open",
     },
     plough: {
       title: "Plough",
-      tag: "Task management, milled for small teams.",
-      desc: "A patient task manager for the small and medium businesses that grow one furrow at a time. Plough turns the daily list into a record of progress — quietly, without ceremony.",
-      meta: ["v0.4 · Private beta", "Web, macOS, iOS"],
+      tag: "Activity management, milled for small and medium businesses.",
+      desc: "Activity management for small and medium businesses, built around a line that keeps moving. Every task travels the belt — intake, work, quality check — so the whole company can see what is running and what is ready.",
+      meta: ["v0.4 · Private beta", "Desktop & mobile"],
     },
     contact: {
       kicker: "03 — Contact",
@@ -61,7 +62,7 @@ const I18N = {
       colBitems: ["Plough"],
       colC: "Elsewhere",
       colCitems: ["Instagram"],
-      copyright: "© 2026 Millwork Studios S.r.l.",
+      copyright: "© 2026 Millwork Studios",
     },
   },
   it: {
@@ -75,6 +76,7 @@ const I18N = {
       h1e: "delle piccole imprese.",
       sub: "Uno studio di ingegneria che trasforma il lavoro silenzioso e ripetitivo di un’azienda in software che cresce con lei.",
       hint: "Muovi il cursore — il vento si muove con te.",
+      hintTouch: "Trascina sul mulino — il vento segue il dito.",
     },
     manifesto: {
       kicker: "01 — Studio",
@@ -89,22 +91,22 @@ const I18N = {
       pillars: [
         { n: "i.", t: "Pazienti", d: "Progettiamo per il secondo anno d’uso, non per la prima settimana." },
         { n: "ii.", t: "Onesti", d: "Niente dark pattern, niente upsell travestiti da feature." },
-        { n: "iii.", t: "Indipendenti", d: "Autofinanziati. Rispondiamo solo a chi usa i nostri strumenti." },
+        { n: "iii.", t: "Indipendenti", d: "Indipendenti e guidati dal fondatore: chi guida lo studio è anche chi sta al banco." },
       ],
     },
     products: {
       kicker: "02 — Prodotti",
       h2a: "Un prodotto, ",
       h2b: "fatto bene.",
-      sub: "",
+      sub: "Plough è il primo prodotto uscito dallo studio. Accanto ai prodotti sviluppiamo software enterprise su commessa — stesso banco, ordine diverso.",
       soon: "Al mulino",
       enter: "Apri",
     },
     plough: {
       title: "Plough",
-      tag: "Task management, macinato per piccoli team.",
-      desc: "Un task manager paziente per le piccole e medie imprese che crescono un solco alla volta. Plough trasforma la lista quotidiana in un registro di progresso — in silenzio, senza cerimonie.",
-      meta: ["v0.4 · Beta privata", "Web, macOS, iOS"],
+      tag: "Gestione delle attività, macinata per le piccole e medie imprese.",
+      desc: "Gestione delle attività per le piccole e medie imprese, costruita attorno a una linea che continua a muoversi. Ogni compito percorre il nastro — ingresso, lavorazione, controllo qualità — così tutta l’azienda vede cosa sta girando e cosa è pronto.",
+      meta: ["v0.4 · Beta privata", "Desktop e mobile"],
     },
     contact: {
       kicker: "03 — Contatti",
@@ -125,7 +127,7 @@ const I18N = {
       colBitems: ["Plough"],
       colC: "Altrove",
       colCitems: ["Instagram"],
-      copyright: "© 2026 Millwork Studios S.r.l.",
+      copyright: "© 2026 Millwork Studios",
     },
   },
 };

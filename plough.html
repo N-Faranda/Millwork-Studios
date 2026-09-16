@@ -26,6 +26,8 @@
     background: var(--paper); color: var(--ink);
     font-family: var(--sans); font-weight: 400; line-height: 1.5;
     -webkit-font-smoothing: antialiased;
+    -webkit-text-size-adjust: 100%;
+    overflow-x: hidden;
   }
   a { color: inherit; text-decoration: none; }
   ::selection { background: var(--ink); color: var(--paper); }
@@ -211,12 +213,31 @@
   .plan {
     background: var(--paper); padding: 40px 32px 36px;
     display: flex; flex-direction: column; gap: 20px;
+    position: relative;
   }
   .plan.featured { background: var(--ink); color: var(--paper); }
   .plan h4 { font-size: 22px; font-weight: 400; letter-spacing: -0.015em; }
   .plan .price { font-family: var(--sans); font-weight: 400; font-size: 52px; letter-spacing: -0.03em; line-height: 1; }
   .plan .price .per { font-size: 13px; color: var(--ink-mute); letter-spacing: 0; margin-left: 4px; }
   .plan.featured .price .per { color: rgba(243,240,233,0.6); }
+  /* out of the flow, so the three cards keep their titles and prices on the
+     same lines whether or not they carry a badge */
+  .plan .badge {
+    position: absolute; top: 22px; right: 32px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: rgba(243,240,233,0.55);
+  }
+  .plan .desc { font-size: 13.5px; line-height: 1.5; color: var(--ink-mute); margin-top: 8px; max-width: 30ch; }
+  .plan.featured .desc { color: rgba(243,240,233,0.6); }
+  .plan .price.custom { font-size: 38px; }
+  .plan .groups { display: flex; flex-direction: column; gap: 20px; }
+  .plan .group-title {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--ink-faint); margin-bottom: 10px;
+  }
+  .plan.featured .group-title { color: rgba(243,240,233,0.45); }
+  .plan .note { color: var(--ink-mute); }
+  .plan.featured .note { color: rgba(243,240,233,0.55); }
   .plan ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
   .plan li { font-size: 14px; color: var(--ink-soft); display: flex; align-items: flex-start; gap: 10px; }
   .plan.featured li { color: rgba(243,240,233,0.85); }
@@ -237,9 +258,51 @@
     .hero .grid, .features .head { grid-template-columns: 1fr; gap: 32px; }
     .hero .meta-grid { grid-template-columns: repeat(2, 1fr); }
     .feat-grid, .pricing-grid { grid-template-columns: 1fr; }
-    .feat:nth-child(3n) { border-right: 1px solid var(--rule); }
+    .feat { border-right: none; }
     .mock-body { grid-template-columns: 1fr; }
     .mock-side { display: none; }
+  }
+
+  /* phones */
+  @media (max-width: 640px) {
+    .container { padding: 0 20px; }
+
+    nav.top { padding: 14px 20px; }
+    nav.top a.brand span { font-size: 14px; }
+    nav.top .back { font-size: 10px; letter-spacing: 0.08em; }
+
+    .hero { padding: 104px 0 64px; }
+    .lede { font-size: 18px; max-width: none; }
+    .cta-row { gap: 10px; }
+    .cta-row .btn { width: 100%; justify-content: center; padding: 15px 18px; }
+    .hero .meta-grid { margin-top: 40px; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+    /* the product mock is a picture of the app — let it shrink, not scroll */
+    .mock { margin-top: 56px; padding: 20px 14px; }
+    .mock-frame { border-radius: 8px; }
+    .mock-titlebar { padding: 11px 14px; }
+    .mock-body { min-height: 0; }
+    .mock-main { padding: 20px 16px; }
+    .mock-h { flex-direction: column; align-items: flex-start; gap: 6px; }
+    .task { grid-template-columns: 20px 1fr auto; gap: 10px; padding: 12px 2px; }
+    .task .tag, .task .owner { display: none; }
+
+    .features { padding: 80px 0; }
+    .features .head { gap: 24px; margin-bottom: 48px; }
+    .feat { padding: 28px 0; }
+
+    .pricing { padding: 72px 0 88px; }
+    .pricing-head { gap: 24px; margin-bottom: 40px; }
+    .plan { padding: 30px 24px 28px; gap: 18px; }
+    .plan .price { font-size: 44px; }
+    .plan .price.custom { font-size: 32px; }
+    .plan .badge { top: 16px; right: 24px; }
+
+    footer.bot { padding: 44px 0 32px; }
+    footer.bot .inner {
+      flex-direction: column; align-items: flex-start; gap: 12px;
+      line-height: 1.6;
+    }
   }
 </style>
 </head>
@@ -273,7 +336,7 @@
       </h1>
       <div>
         <p class="lede">
-          A patient task manager for the small and medium businesses that grow <em class="serif">one furrow at a time</em>. Plough turns the daily list into a record of progress — quietly, without ceremony.
+          Activity management for small and medium businesses, built around a line that keeps moving. Every task travels the belt — <em class="serif">intake, work, quality check</em> — so the whole company can see what is running and what is ready.
         </p>
         <div class="cta-row">
           <a class="btn btn-dark" href="#">Request beta access →</a>
@@ -285,19 +348,19 @@
     <div class="meta-grid">
       <div class="meta-cell">
         <div class="kicker label">Built for</div>
-        <div class="value">Teams of 3 to 80</div>
+        <div class="value">SMEs, from 5 seats up</div>
       </div>
       <div class="meta-cell">
         <div class="kicker label">Platforms</div>
-        <div class="value">Web, macOS, iOS</div>
+        <div class="value">macOS, Windows, mobile</div>
       </div>
       <div class="meta-cell">
         <div class="kicker label">Pricing</div>
-        <div class="value">From €9 / seat / month</div>
+        <div class="value">From €29 / month</div>
       </div>
       <div class="meta-cell">
         <div class="kicker label">Status</div>
-        <div class="value">Private beta — Q3 2026</div>
+        <div class="value">Private beta — by invitation</div>
       </div>
     </div>
 
@@ -311,11 +374,11 @@
         <div class="mock-body">
           <aside class="mock-side">
             <div class="side-section">Today</div>
-            <div class="side-item active"><span>The list</span><span class="count">7</span></div>
+            <div class="side-item active"><span>The line</span><span class="count">7</span></div>
             <div class="side-item"><span>Calendar</span><span class="count">3</span></div>
             <div class="side-item"><span>Inbox</span><span class="count">12</span></div>
 
-            <div class="side-section">Furrows</div>
+            <div class="side-section">Products</div>
             <div class="side-item"><span>Bakery</span><span class="count">22</span></div>
             <div class="side-item"><span>Wholesale</span><span class="count">8</span></div>
             <div class="side-item"><span>Renovation</span><span class="count">14</span></div>
@@ -328,7 +391,7 @@
 
           <main class="mock-main">
             <div class="mock-h">
-              <h3>The list <em class="serif" style="color: var(--ink-mute);">— Monday</em></h3>
+              <h3>The line <em class="serif" style="color: var(--ink-mute);">— Monday</em></h3>
               <span class="date">11 May 2026 · 7 open</span>
             </div>
 
@@ -369,8 +432,8 @@
             </div>
             <div class="task">
               <div class="check"></div>
-              <div class="title">Draft May newsletter — “bread of the season”</div>
-              <span class="tag">Marketing</span>
+              <div class="title">Quality check — Saturday pastry batch</div>
+              <span class="tag">Bakery</span>
               <span class="owner">Marco</span>
               <span class="due">Wed</span>
             </div>
@@ -402,33 +465,33 @@
     <div class="feat-grid">
       <div class="feat">
         <div class="num">i.</div>
-        <h3>Furrows, not folders</h3>
-        <p>Group work by the rhythm it actually has — by season, by client, by quiet recurring routine. Plough doesn’t pretend everything is a project.</p>
+        <h3>A line, not a list</h3>
+        <p>Work travels a conveyor: taken in, worked, checked, done. Everyone watches the same belt, and it moves in real time as people touch it.</p>
       </div>
       <div class="feat">
         <div class="num">ii.</div>
-        <h3>One list, every day</h3>
-        <p>Your team opens to a single morning list. What’s due, what’s overdue, what’s growing. No dashboards, no widgets.</p>
+        <h3>Nothing leaves unchecked</h3>
+        <p>Every task passes a quality gate before it closes. The check is a station on the line, not a box somebody remembers to tick.</p>
       </div>
       <div class="feat">
         <div class="num">iii.</div>
-        <h3>Quiet handovers</h3>
-        <p>When someone’s away, their furrow keeps moving. Reassignments leave a paper trail; nobody has to ask twice.</p>
+        <h3>Automations that push</h3>
+        <p>Rules that carry work forward on their own — five on Starter, fifteen on Professional, as many as the shop needs on Custom.</p>
       </div>
       <div class="feat">
         <div class="num">iv.</div>
-        <h3>The miller’s ledger</h3>
-        <p>Every closed task becomes a line in your studio’s ledger — a calm, searchable record of what got done and by whom.</p>
+        <h3>Organizations and products</h3>
+        <p>Shape the work the way the business is actually shaped: an organization, its product lines, the people on each. No folder tree to invent.</p>
       </div>
       <div class="feat">
         <div class="num">v.</div>
-        <h3>Offline, by default</h3>
-        <p>Plough works in the back of a bakery, on a building site, on the train. Sync resumes when you’re back in range.</p>
+        <h3>Files stay where they live</h3>
+        <p>Sync with Google Drive, OneDrive and iCloud. Plough points at the documents a company already keeps instead of swallowing them.</p>
       </div>
       <div class="feat">
         <div class="num">vi.</div>
-        <h3>Your data, your mill</h3>
-        <p>Export everything as Markdown or CSV at any time. Self-hosting available on the Atelier plan.</p>
+        <h3>On the desk and on the floor</h3>
+        <p>Native desktop apps for macOS and Windows. Mobile joins them from Professional up, for the half of the work that never happens at a desk.</p>
       </div>
     </div>
   </div>
@@ -436,7 +499,7 @@
 
 <section class="pricing">
   <div class="container">
-    <div style="display: flex; justify-content: space-between; align-items: end; margin-bottom: 56px; gap: 48px; flex-wrap: wrap;">
+    <div class="pricing-head" style="display: flex; justify-content: space-between; align-items: end; margin-bottom: 56px; gap: 48px; flex-wrap: wrap;">
       <div>
         <div class="kicker">Pricing</div>
         <h2 style="font-family: var(--sans); font-weight: 400; font-size: clamp(36px, 4.4vw, 64px); line-height: 1.02; letter-spacing: -0.03em; margin-top: 28px;">
@@ -444,43 +507,114 @@
         </h2>
       </div>
       <p style="max-width: 360px; font-size: 15px; line-height: 1.55; color: var(--ink-mute);">
-        No per-seat surprises. No feature held hostage. Cancel any month — your ledger is yours to keep.
+        A flat monthly price per workspace, not a headcount. Extra seats and extra organizations are priced in the open — you only need a conversation when you need Custom.
       </p>
     </div>
 
     <div class="pricing-grid">
       <div class="plan">
-        <h4>Apprentice</h4>
-        <div class="price">€9<span class="per">/ seat · month</span></div>
-        <ul>
-          <li>Up to 5 seats</li>
-          <li>Unlimited furrows</li>
-          <li>The list & calendar</li>
-          <li>Markdown & CSV export</li>
-        </ul>
-        <a class="btn btn-ghost" href="#" style="margin-top: auto;">Start free →</a>
+        <div>
+          <h4>Starter</h4>
+          <p class="desc">Core activity management for small teams getting started.</p>
+        </div>
+        <div class="price">€29<span class="per">/ month</span></div>
+        <div class="groups">
+          <div class="group">
+            <div class="group-title">Capacity</div>
+            <ul>
+              <li>5 users</li>
+              <li>1 organization</li>
+              <li>3 products per organization</li>
+            </ul>
+          </div>
+          <div class="group">
+            <div class="group-title">Features</div>
+            <ul>
+              <li>Conveyor UI &amp; real-time tracking</li>
+              <li>Task management &amp; QC gate</li>
+              <li>5 automations</li>
+              <li>Sync: Drive, OneDrive, iCloud</li>
+              <li>Desktop apps (macOS, Windows)</li>
+            </ul>
+          </div>
+          <div class="group">
+            <div class="group-title">Support</div>
+            <ul>
+              <li>Community &amp; docs</li>
+            </ul>
+          </div>
+        </div>
+        <a class="btn btn-ghost" href="#" style="margin-top: auto;">Learn more →</a>
       </div>
+
       <div class="plan featured">
-        <h4>Miller</h4>
-        <div class="price">€16<span class="per">/ seat · month</span></div>
-        <ul>
-          <li>Unlimited seats</li>
-          <li>The miller’s ledger</li>
-          <li>Quiet handovers</li>
-          <li>Priority support, by post</li>
-        </ul>
-        <a class="btn" style="background: var(--paper); color: var(--ink); border-color: var(--paper); margin-top: auto;" href="#">Request beta →</a>
+        <div>
+          <span class="badge">Most chosen</span>
+          <h4>Professional</h4>
+          <p class="desc">Multi-org operations with advanced team collaboration.</p>
+        </div>
+        <div class="price">€49<span class="per">/ month</span></div>
+        <div class="groups">
+          <div class="group">
+            <div class="group-title">Capacity</div>
+            <ul>
+              <li>15 users <span class="note">— €5 each beyond</span></li>
+              <li>3 organizations <span class="note">— €19 each beyond</span></li>
+              <li>5 products per organization</li>
+            </ul>
+          </div>
+          <div class="group">
+            <div class="group-title">Features</div>
+            <ul>
+              <li>Conveyor UI &amp; real-time collaboration</li>
+              <li>Advanced task management</li>
+              <li>15 automations</li>
+              <li>Sync: Drive, OneDrive, iCloud</li>
+              <li>Desktop &amp; mobile apps</li>
+            </ul>
+          </div>
+          <div class="group">
+            <div class="group-title">Support</div>
+            <ul>
+              <li>3 working days response time</li>
+            </ul>
+          </div>
+        </div>
+        <a class="btn" style="background: var(--paper); color: var(--ink); border-color: var(--paper); margin-top: auto;" href="#">Get started →</a>
       </div>
+
       <div class="plan">
-        <h4>Atelier</h4>
-        <div class="price">€39<span class="per">/ seat · month</span></div>
-        <ul>
-          <li>Self-hosting included</li>
-          <li>Custom furrow templates</li>
-          <li>SSO & audit log</li>
-          <li>Quarterly studio visit</li>
-        </ul>
-        <a class="btn btn-ghost" href="#" style="margin-top: auto;">Talk to us →</a>
+        <div>
+          <h4>Custom</h4>
+          <p class="desc">Unlimited everything, for enterprise implementations.</p>
+        </div>
+        <div class="price custom">Custom</div>
+        <div class="groups">
+          <div class="group">
+            <div class="group-title">Capacity</div>
+            <ul>
+              <li>Unlimited users</li>
+              <li>Unlimited organizations</li>
+              <li>Unlimited products</li>
+            </ul>
+          </div>
+          <div class="group">
+            <div class="group-title">Features</div>
+            <ul>
+              <li>Everything in Professional</li>
+              <li>Unlimited automations</li>
+              <li>Sync plus custom connectors</li>
+              <li>Custom development</li>
+            </ul>
+          </div>
+          <div class="group">
+            <div class="group-title">Support</div>
+            <ul>
+              <li>1 working day response time</li>
+            </ul>
+          </div>
+        </div>
+        <a class="btn btn-ghost" href="#" style="margin-top: auto;">Contact sales →</a>
       </div>
     </div>
   </div>
@@ -488,7 +622,7 @@
 
 <footer class="bot">
   <div class="container inner">
-    <span>© 2026 Millwork Studios S.r.l. — Plough is a Millwork product.</span>
+    <span>© 2026 Millwork Studios — Plough is a Millwork Studios product.</span>
     <a href="index.html">← Back to studio</a>
   </div>
 </footer>

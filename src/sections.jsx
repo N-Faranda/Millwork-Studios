@@ -1,12 +1,15 @@
 // All page sections live here. Editorial monochrome, OpenAI-inspired layout.
 
-const { useT } = window;
+const { useT, useIsMobile, useIsNarrow, useIsTouch } = window;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // NAV
 const Nav = () => {
   const { t, lang, setLang } = useT();
+  const isMobile = useIsMobile();
   const [scrolled, setScrolled] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
+
   React.useEffect(() => {
     const on = () => setScrolled(window.scrollY > 12);
     on();
@@ -14,17 +17,42 @@ const Nav = () => {
     return () => window.removeEventListener("scroll", on);
   }, []);
 
+  // the drawer is a phone affordance — never leave it hanging on a wider window
+  React.useEffect(() => {
+    if (!isMobile) setOpen(false);
+  }, [isMobile]);
+
+  const solid = scrolled || open;
+
   const navStyle = {
     position: "fixed",
     top: 0, left: 0, right: 0,
     zIndex: 50,
-    padding: scrolled ? "14px 32px" : "22px 32px",
-    transition: "all 0.35s ease",
-    background: scrolled ? "rgba(243, 240, 233, 0.85)" : "transparent",
-    backdropFilter: scrolled ? "blur(12px)" : "none",
-    WebkitBackdropFilter: scrolled ? "blur(12px)" : "none",
-    borderBottom: scrolled ? "1px solid var(--rule)" : "1px solid transparent",
+    padding: isMobile
+      ? (solid ? "12px 20px" : "16px 20px")
+      : (solid ? "14px 32px" : "22px 32px"),
+    transition: "padding 0.35s ease, background 0.35s ease, border-color 0.35s ease",
+    // the open drawer needs an opaque sheet — blurred hero text behind the
+    // links is unreadable
+    background: open ? "var(--paper)" : solid ? "rgba(243, 240, 233, 0.85)" : "transparent",
+    backdropFilter: solid ? "blur(12px)" : "none",
+    WebkitBackdropFilter: solid ? "blur(12px)" : "none",
+    borderBottom: solid ? "1px solid var(--rule)" : "1px solid transparent",
   };
+
+  const toTop = (e) => {
+    e.preventDefault();
+    setOpen(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    history.replaceState(null, "", window.location.pathname);
+  };
+
+  const items = [
+    { label: "Home", href: "#top", onClick: toTop },
+    { label: t.nav.products, href: "#products" },
+    { label: t.nav.studio, href: "#studio" },
+    { label: t.nav.contact, href: "#contact" },
+  ];
 
   return (
     <nav style={navStyle}>
@@ -39,11 +67,7 @@ const Nav = () => {
       >
         <a
           href="#top"
-          onClick={(e) => {
-            e.preventDefault();
-            window.scrollTo({ top: 0, behavior: "smooth" });
-            history.replaceState(null, "", window.location.pathname);
-          }}
+          onClick={toTop}
           style={{ display: "flex", alignItems: "center", gap: 10 }}
         >
           <MillMark size={20} />
@@ -59,17 +83,88 @@ const Nav = () => {
           </span>
         </a>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 28 }}>
-          <NavLink href="#top" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }}>{lang === "it" ? "Home" : "Home"}</NavLink>
-          <NavLink href="#products">{t.nav.products}</NavLink>
-          <NavLink href="#studio">{t.nav.studio}</NavLink>
-          <NavLink href="#contact">{t.nav.contact}</NavLink>
+        <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 12 : 28 }}>
+          {!isMobile &&
+            items.map((it) => (
+              <NavLink key={it.href} href={it.href} onClick={it.onClick}>
+                {it.label}
+              </NavLink>
+            ))}
           <LangToggle lang={lang} setLang={setLang} />
+          {isMobile && <MenuButton open={open} onClick={() => setOpen((o) => !o)} />}
         </div>
       </div>
+
+      {isMobile && (
+        <div
+          style={{
+            maxHeight: open ? 320 : 0,
+            opacity: open ? 1 : 0,
+            overflow: "hidden",
+            transition: "max-height 0.35s ease, opacity 0.25s ease",
+          }}
+        >
+          <div style={{ display: "flex", flexDirection: "column", paddingTop: 10 }}>
+            {items.map((it) => (
+              <a
+                key={it.href}
+                href={it.href}
+                onClick={(e) => {
+                  if (it.onClick) it.onClick(e);
+                  setOpen(false);
+                }}
+                style={{
+                  padding: "14px 2px",
+                  fontSize: 17,
+                  letterSpacing: "-0.01em",
+                  color: "var(--ink-soft)",
+                  borderTop: "1px solid var(--rule-soft)",
+                }}
+              >
+                {it.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
     </nav>
   );
 };
+
+// Hamburger that folds into a cross when the drawer is open.
+const MenuButton = ({ open, onClick }) => (
+  <button
+    onClick={onClick}
+    aria-label={open ? "Close menu" : "Open menu"}
+    aria-expanded={open}
+    style={{
+      width: 40,
+      height: 40,
+      marginRight: -8,
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 5,
+    }}
+  >
+    {[0, 1].map((i) => (
+      <span
+        key={i}
+        style={{
+          display: "block",
+          width: 20,
+          height: 1.5,
+          background: "var(--ink)",
+          transition: "transform 0.3s ease",
+          transform: open
+            ? `translateY(${i === 0 ? 3.25 : -3.25}px) rotate(${i === 0 ? 45 : -45}deg)`
+            : "none",
+        }}
+      />
+    ))}
+  </button>
+);
 
 const NavLink = ({ href, children, onClick }) => (
   <a
@@ -139,7 +234,18 @@ const MillMark = ({ size = 24 }) => (
 // HERO
 const Hero = () => {
   const { t } = useT();
+  const isMobile = useIsMobile();
+  const isTouch = useIsTouch();
   const wrapRef = React.useRef(null);
+
+  const annotations = (
+    <React.Fragment>
+      <div style={annotStyle(isMobile, "left")}>FIG. 01 — MILL, IN SECTION</div>
+      <div style={annotStyle(isMobile, "right")}>
+        {isTouch ? "INTERACTIVE — DRAG" : "INTERACTIVE — MOVE CURSOR"}
+      </div>
+    </React.Fragment>
+  );
 
   return (
     <section
@@ -147,13 +253,13 @@ const Hero = () => {
       ref={wrapRef}
       style={{
         position: "relative",
-        minHeight: "100vh",
-        paddingTop: 110,
-        paddingBottom: 80,
+        minHeight: isMobile ? "auto" : "100vh",
+        paddingTop: isMobile ? 96 : 110,
+        paddingBottom: isMobile ? 56 : 80,
         overflow: "hidden",
       }}
     >
-      <ParticleField />
+      <ParticleField density={isMobile ? 0.00007 : 0.00012} />
 
       <div
         className="container"
@@ -161,26 +267,28 @@ const Hero = () => {
           position: "relative",
           zIndex: 2,
           display: "grid",
-          gridTemplateColumns: "1.1fr 1fr",
-          gap: 64,
+          // minmax(0, …) lets the mill column shrink below the mill's own
+          // width between the tablet and desktop sizes, instead of overflowing
+          gridTemplateColumns: isMobile ? "1fr" : "1.1fr minmax(0, 1fr)",
+          gap: isMobile ? 48 : 64,
           alignItems: "center",
-          minHeight: "calc(100vh - 110px)",
+          minHeight: isMobile ? 0 : "calc(100vh - 110px)",
         }}
       >
         {/* Text column */}
         <div>
-          <div className="kicker" style={{ marginBottom: 36 }}>
+          <div className="kicker" style={{ marginBottom: isMobile ? 24 : 36 }}>
             {t.hero.kicker}
           </div>
           <h1
             style={{
               fontFamily: "var(--sans)",
               fontWeight: 400,
-              fontSize: "clamp(44px, 6.2vw, 92px)",
+              fontSize: isMobile ? "clamp(38px, 9.5vw, 60px)" : "clamp(44px, 6.2vw, 92px)",
               lineHeight: 1.02,
               letterSpacing: "-0.035em",
               color: "var(--ink)",
-              maxWidth: "12.5ch",
+              maxWidth: isMobile ? "none" : "12.5ch",
             }}
           >
             {t.hero.h1a}{" "}
@@ -210,9 +318,9 @@ const Hero = () => {
 
           <p
             style={{
-              marginTop: 36,
+              marginTop: isMobile ? 26 : 36,
               maxWidth: 460,
-              fontSize: 17,
+              fontSize: isMobile ? 16 : 17,
               lineHeight: 1.55,
               color: "var(--ink-soft)",
             }}
@@ -222,7 +330,7 @@ const Hero = () => {
 
           <div
             style={{
-              marginTop: 56,
+              marginTop: isMobile ? 32 : 56,
               display: "flex",
               alignItems: "center",
               gap: 14,
@@ -232,6 +340,7 @@ const Hero = () => {
               style={{
                 width: 28,
                 height: 1,
+                flexShrink: 0,
                 background: "var(--ink-mute)",
                 opacity: 0.5,
               }}
@@ -240,7 +349,7 @@ const Hero = () => {
               className="kicker"
               style={{ color: "var(--ink-mute)", fontSize: 11 }}
             >
-              {t.hero.hint}
+              {isTouch ? t.hero.hintTouch : t.hero.hint}
             </span>
           </div>
         </div>
@@ -249,41 +358,29 @@ const Hero = () => {
         <div
           style={{
             display: "flex",
+            flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
             position: "relative",
           }}
         >
-          <Windmill size={560} />
+          <Windmill size={isMobile ? "min(86vw, 380px)" : 560} />
 
           {/* Coordinate ticks / editorial annotation */}
-          <div
-            style={{
-              position: "absolute",
-              left: 0,
-              top: 24,
-              fontFamily: "var(--mono)",
-              fontSize: 10,
-              color: "var(--ink-mute)",
-              letterSpacing: "0.1em",
-            }}
-          >
-            FIG. 01 — MILL, IN SECTION
-          </div>
-          <div
-            style={{
-              position: "absolute",
-              right: 0,
-              bottom: 24,
-              fontFamily: "var(--mono)",
-              fontSize: 10,
-              color: "var(--ink-mute)",
-              letterSpacing: "0.1em",
-              textAlign: "right",
-            }}
-          >
-            INTERACTIVE — MOVE CURSOR
-          </div>
+          {isMobile ? (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                width: "100%",
+                marginTop: 4,
+              }}
+            >
+              {annotations}
+            </div>
+          ) : (
+            annotations
+          )}
         </div>
       </div>
 
@@ -302,25 +399,44 @@ const Hero = () => {
   );
 };
 
+// On desktop the two ticks sit in the corners of the mill panel; on a phone
+// they line up as a caption strip underneath it.
+const annotStyle = (isMobile, side) => ({
+  position: isMobile ? "static" : "absolute",
+  left: isMobile || side === "right" ? undefined : 0,
+  right: isMobile || side === "left" ? undefined : 0,
+  top: isMobile || side === "right" ? undefined : 24,
+  bottom: isMobile || side === "left" ? undefined : 24,
+  fontFamily: "var(--mono)",
+  fontSize: 10,
+  color: "var(--ink-mute)",
+  letterSpacing: "0.1em",
+  textAlign: side === "right" ? "right" : "left",
+});
+
 // ─────────────────────────────────────────────────────────────────────────────
 // MANIFESTO
 const Manifesto = () => {
   const { t } = useT();
+  const isMobile = useIsMobile();
   return (
     <section
       id="studio"
-      style={{ padding: "140px 0 120px", position: "relative" }}
+      style={{
+        padding: isMobile ? "88px 0 72px" : "140px 0 120px",
+        position: "relative",
+      }}
     >
       <div className="container">
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "1fr 2.2fr",
-            gap: 80,
+            gridTemplateColumns: isMobile ? "1fr" : "1fr 2.2fr",
+            gap: isMobile ? 44 : 80,
             alignItems: "start",
           }}
         >
-          <div style={{ position: "sticky", top: 120 }}>
+          <div style={isMobile ? {} : { position: "sticky", top: 120 }}>
             <div className="kicker">{t.manifesto.kicker}</div>
             <div style={{ marginTop: 32 }}>
               <AsciiMill />
@@ -332,10 +448,10 @@ const Manifesto = () => {
               style={{
                 fontFamily: "var(--sans)",
                 fontWeight: 400,
-                fontSize: "clamp(34px, 4vw, 56px)",
+                fontSize: isMobile ? "clamp(28px, 7.4vw, 44px)" : "clamp(34px, 4vw, 56px)",
                 lineHeight: 1.08,
                 letterSpacing: "-0.025em",
-                maxWidth: "20ch",
+                maxWidth: isMobile ? "none" : "20ch",
               }}
             >
               {t.manifesto.h2a}
@@ -353,12 +469,12 @@ const Manifesto = () => {
 
             <div
               style={{
-                marginTop: 56,
+                marginTop: isMobile ? 32 : 56,
                 maxWidth: 620,
                 display: "flex",
                 flexDirection: "column",
                 gap: 22,
-                fontSize: 17,
+                fontSize: isMobile ? 16 : 17,
                 lineHeight: 1.65,
                 color: "var(--ink-soft)",
               }}
@@ -371,10 +487,10 @@ const Manifesto = () => {
             {/* pillars */}
             <div
               style={{
-                marginTop: 88,
+                marginTop: isMobile ? 52 : 88,
                 display: "grid",
-                gridTemplateColumns: "repeat(3, 1fr)",
-                gap: 36,
+                gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)",
+                gap: isMobile ? 30 : 36,
                 borderTop: "1px solid var(--rule)",
                 paddingTop: 36,
               }}
@@ -426,6 +542,7 @@ const Manifesto = () => {
 // PRODUCT TILE (Plough)
 const PloughTile = () => {
   const { t } = useT();
+  const isMobile = useIsMobile();
   const tileRef = React.useRef(null);
   const [hover, setHover] = React.useState(false);
 
@@ -457,8 +574,8 @@ const PloughTile = () => {
         position: "relative",
         background: "var(--ink)",
         color: "var(--paper)",
-        padding: "44px 44px 36px",
-        minHeight: 520,
+        padding: isMobile ? "28px 24px 24px" : "44px 44px 36px",
+        minHeight: isMobile ? 380 : 520,
         overflow: "hidden",
         transition: "transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)",
         transform: hover ? "translateY(-4px)" : "translateY(0)",
@@ -468,10 +585,12 @@ const PloughTile = () => {
       <div
         style={{
           position: "absolute",
-          right: -120,
-          bottom: -120,
-          width: 520,
-          height: 520,
+          // on a narrow tile the wheel has to sit further out, or its hub lands
+          // in the middle of the card and reads as a smudge behind the text
+          right: isMobile ? -140 : -120,
+          bottom: isMobile ? -150 : -120,
+          width: isMobile ? 380 : 520,
+          height: isMobile ? 380 : 520,
           opacity: hover ? 0.18 : 0.1,
           transition: "opacity 0.5s ease",
         }}
@@ -510,9 +629,9 @@ const PloughTile = () => {
           display: "flex",
           flexDirection: "column",
           height: "100%",
-          minHeight: 440,
+          minHeight: isMobile ? 320 : 440,
           justifyContent: "space-between",
-          gap: 40,
+          gap: isMobile ? 28 : 40,
         }}
       >
         {/* Top: meta + arrow */}
@@ -556,7 +675,7 @@ const PloughTile = () => {
             style={{
               fontFamily: "var(--sans)",
               fontWeight: 400,
-              fontSize: "clamp(48px, 5.5vw, 88px)",
+              fontSize: isMobile ? "clamp(44px, 13vw, 64px)" : "clamp(48px, 5.5vw, 88px)",
               lineHeight: 0.95,
               letterSpacing: "-0.04em",
               marginBottom: 14,
@@ -577,7 +696,7 @@ const PloughTile = () => {
           </div>
           <div
             style={{
-              fontSize: 18,
+              fontSize: isMobile ? 16 : 18,
               color: "rgba(243, 240, 233, 0.7)",
               maxWidth: "32ch",
               lineHeight: 1.45,
@@ -591,8 +710,10 @@ const PloughTile = () => {
         <div
           style={{
             display: "flex",
+            flexDirection: isMobile ? "column" : "row",
             justifyContent: "space-between",
-            alignItems: "flex-end",
+            alignItems: isMobile ? "flex-start" : "flex-end",
+            gap: isMobile ? 14 : 0,
             paddingTop: 24,
             borderTop: "1px solid rgba(243, 240, 233, 0.15)",
           }}
@@ -600,7 +721,8 @@ const PloughTile = () => {
           <div
             style={{
               display: "flex",
-              gap: 24,
+              flexWrap: "wrap",
+              gap: isMobile ? "6px 16px" : 24,
               fontFamily: "var(--mono)",
               fontSize: 11,
               letterSpacing: "0.1em",
@@ -631,6 +753,7 @@ const PloughTile = () => {
 
 // "Coming soon" tile — a single subtle placeholder for the slot of future products
 const SoonTile = ({ label }) => {
+  const isMobile = useIsMobile();
   const [hover, setHover] = React.useState(false);
   return (
     <div
@@ -640,8 +763,8 @@ const SoonTile = ({ label }) => {
         position: "relative",
         background: "transparent",
         border: "1px dashed var(--rule)",
-        padding: "44px 44px 36px",
-        minHeight: 520,
+        padding: isMobile ? "28px 24px 24px" : "44px 44px 36px",
+        minHeight: isMobile ? 220 : 520,
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
@@ -656,10 +779,10 @@ const SoonTile = ({ label }) => {
           style={{
             fontFamily: "var(--serif)",
             fontStyle: "italic",
-            fontSize: 56,
+            fontSize: isMobile ? 40 : 56,
             lineHeight: 1,
             color: "var(--ink-faint)",
-            marginBottom: 16,
+            marginBottom: isMobile ? 10 : 16,
           }}
         >
           —
@@ -679,16 +802,23 @@ const SoonTile = ({ label }) => {
 // PRODUCTS
 const Products = () => {
   const { t } = useT();
+  const isMobile = useIsMobile();
   return (
-    <section id="products" style={{ padding: "140px 0 120px", borderTop: "1px solid var(--rule)" }}>
+    <section
+      id="products"
+      style={{
+        padding: isMobile ? "88px 0 72px" : "140px 0 120px",
+        borderTop: "1px solid var(--rule)",
+      }}
+    >
       <div className="container">
         <div
           style={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "flex-end",
-            marginBottom: 64,
-            gap: 48,
+            marginBottom: isMobile ? 40 : 64,
+            gap: isMobile ? 24 : 48,
             flexWrap: "wrap",
           }}
         >
@@ -698,10 +828,10 @@ const Products = () => {
               style={{
                 fontFamily: "var(--sans)",
                 fontWeight: 400,
-                fontSize: "clamp(34px, 4vw, 56px)",
+                fontSize: isMobile ? "clamp(28px, 7.4vw, 44px)" : "clamp(34px, 4vw, 56px)",
                 lineHeight: 1.05,
                 letterSpacing: "-0.025em",
-                marginTop: 28,
+                marginTop: isMobile ? 18 : 28,
               }}
             >
               {t.products.h2a}
@@ -731,8 +861,8 @@ const Products = () => {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: 24,
+            gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)",
+            gap: isMobile ? 16 : 24,
           }}
         >
           <PloughTile />
@@ -748,6 +878,8 @@ const Products = () => {
 // CONTACT
 const Contact = () => {
   const { t } = useT();
+  const isMobile = useIsMobile();
+  const isNarrow = useIsNarrow();
   const [copied, setCopied] = React.useState(false);
   const onCopy = (e) => {
     e.preventDefault();
@@ -760,7 +892,7 @@ const Contact = () => {
     <section
       id="contact"
       style={{
-        padding: "140px 0 140px",
+        padding: isMobile ? "88px 0 88px" : "140px 0 140px",
         borderTop: "1px solid var(--rule)",
         background: "var(--paper-2)",
       }}
@@ -769,8 +901,8 @@ const Contact = () => {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "1fr 1.2fr",
-            gap: 80,
+            gridTemplateColumns: isMobile ? "1fr" : "1fr 1.2fr",
+            gap: isMobile ? 44 : 80,
             alignItems: "start",
           }}
         >
@@ -780,10 +912,10 @@ const Contact = () => {
               style={{
                 fontFamily: "var(--sans)",
                 fontWeight: 400,
-                fontSize: "clamp(40px, 5vw, 72px)",
+                fontSize: isMobile ? "clamp(32px, 8.4vw, 52px)" : "clamp(40px, 5vw, 72px)",
                 lineHeight: 1.02,
                 letterSpacing: "-0.03em",
-                marginTop: 28,
+                marginTop: isMobile ? 18 : 28,
               }}
             >
               {t.contact.h2a}
@@ -810,7 +942,7 @@ const Contact = () => {
             </p>
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 36 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: isMobile ? 16 : 36 }}>
             {/* Email card */}
             <a
               href={`mailto:${t.contact.email}`}
@@ -818,13 +950,14 @@ const Contact = () => {
               onClick={onCopy}
               style={{
                 display: "flex",
+                flexDirection: isNarrow ? "column" : "row",
                 justifyContent: "space-between",
-                alignItems: "center",
-                padding: "28px 32px",
+                alignItems: isNarrow ? "flex-start" : "center",
+                padding: isMobile ? "22px 22px" : "28px 32px",
                 background: "var(--paper)",
                 border: "1px solid var(--rule)",
                 transition: "all 0.3s ease",
-                gap: 24,
+                gap: isNarrow ? 14 : 24,
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.background = "var(--ink)";
@@ -835,7 +968,7 @@ const Contact = () => {
                 e.currentTarget.style.color = "var(--ink)";
               }}
             >
-              <div>
+              <div style={{ minWidth: 0 }}>
                 <div
                   className="kicker"
                   style={{ color: "inherit", opacity: 0.55, marginBottom: 6 }}
@@ -846,8 +979,9 @@ const Contact = () => {
                   style={{
                     fontFamily: "var(--sans)",
                     fontWeight: 400,
-                    fontSize: "clamp(20px, 2.4vw, 30px)",
+                    fontSize: isMobile ? "clamp(15px, 4.4vw, 20px)" : "clamp(20px, 2.4vw, 30px)",
                     letterSpacing: "-0.015em",
+                    overflowWrap: "anywhere",
                   }}
                 >
                   {t.contact.email}
@@ -870,8 +1004,8 @@ const Contact = () => {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: 24,
+                gridTemplateColumns: isNarrow ? "1fr" : "1fr 1fr",
+                gap: isMobile ? 16 : 24,
               }}
             >
               <div
@@ -935,10 +1069,12 @@ const Contact = () => {
 // FOOTER
 const Footer = () => {
   const { t } = useT();
+  const isMobile = useIsMobile();
+  const isNarrow = useIsNarrow();
   return (
     <footer
       style={{
-        padding: "72px 0 40px",
+        padding: isMobile ? "56px 0 32px" : "72px 0 40px",
         borderTop: "1px solid var(--rule)",
       }}
     >
@@ -946,12 +1082,12 @@ const Footer = () => {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "1.6fr 1fr 1fr 1fr",
-            gap: 48,
+            gridTemplateColumns: isNarrow ? "1fr 1fr" : isMobile ? "1fr 1fr 1fr" : "1.6fr 1fr 1fr 1fr",
+            gap: isMobile ? 32 : 48,
             alignItems: "start",
           }}
         >
-          <div>
+          <div style={{ gridColumn: isMobile ? "1 / -1" : "auto" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18 }}>
               <MillMark size={20} />
               <span style={{ fontWeight: 500, fontSize: 15 }}>Millwork Studios</span>
@@ -1000,12 +1136,14 @@ const Footer = () => {
 
         <div
           style={{
-            marginTop: 64,
+            marginTop: isMobile ? 44 : 64,
             paddingTop: 24,
             borderTop: "1px solid var(--rule)",
             display: "flex",
+            flexDirection: isNarrow ? "column" : "row",
             justifyContent: "space-between",
-            alignItems: "center",
+            alignItems: isNarrow ? "flex-start" : "center",
+            gap: isNarrow ? 8 : 0,
             fontFamily: "var(--mono)",
             fontSize: 11,
             letterSpacing: "0.08em",
