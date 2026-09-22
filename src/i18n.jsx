@@ -13,8 +13,17 @@ const I18N = {
       hint: "Move your cursor — the wind moves with you.",
       hintTouch: "Drag across the mill — the wind follows your finger.",
     },
+    bench: {
+      kicker: "01 — Platforms",
+      h2a: "One bench, ",
+      h2b: "every platform.",
+      sub: "An independent software house: we make our own tools and bring them to every screen people work on — phone, tablet, computer, browser.",
+      captions: ["iPhone · iPad", "Phones · tablets", "Mac", "PC", "Any browser", "Work doesn’t stop", "Same data, every screen"],
+      hint: "The mill’s wind drives the rail — hover to slow it down.",
+      hintTouch: "Drag across the mill — the rail picks up speed.",
+    },
     manifesto: {
-      kicker: "01 — Studio",
+      kicker: "02 — Studio",
       h2a: "Software, ",
       h2b: "milled slowly,",
       h2c: " is software that lasts.",
@@ -30,7 +39,7 @@ const I18N = {
       ],
     },
     products: {
-      kicker: "02 — Products",
+      kicker: "03 — Products",
       h2a: "One product, ",
       h2b: "made well.",
       sub: "Plough is the first product to leave the studio. Alongside it we build enterprise software on commission — the same bench, a different order.",
@@ -43,8 +52,17 @@ const I18N = {
       desc: "Activity management for small and medium businesses, built around a line that keeps moving. Every task travels the belt — intake, work, quality check — so the whole company can see what is running and what is ready.",
       meta: ["v0.4 · Private beta", "Desktop & mobile"],
     },
+    platforms: {
+      aria: "The same Plough screen drawn at three sizes — phone, tablet and desktop — with one task moving across all three at once.",
+      cols: ["INTAKE", "WORK", "QC"],
+      benches: [
+        { key: "phone", label: "Phone · 375 pt", t: "In the pocket, on site.", d: "Check the line, move a task, snap a photo — between one job and the next." },
+        { key: "tablet", label: "Tablet · 768 pt", t: "On the bench, in the workshop.", d: "Big enough to work on, light enough to carry to the machine." },
+        { key: "desktop", label: "Desktop · 1440 px", t: "At the desk, in the office.", d: "The whole line at a glance: planning, handovers, reports." },
+      ],
+    },
     contact: {
-      kicker: "03 — Contact",
+      kicker: "04 — Contact",
       h2a: "Write to the ",
       h2b: "miller.",
       body: "We answer everything that comes through this address. Pitches, questions, weather reports.",
@@ -78,8 +96,17 @@ const I18N = {
       hint: "Muovi il cursore — il vento si muove con te.",
       hintTouch: "Trascina sul mulino — il vento segue il dito.",
     },
+    bench: {
+      kicker: "01 — Piattaforme",
+      h2a: "Un solo banco, ",
+      h2b: "ogni piattaforma.",
+      sub: "Una software house indipendente: costruiamo i nostri strumenti e li portiamo su ogni schermo su cui si lavora — telefono, tablet, computer, browser.",
+      captions: ["iPhone · iPad", "Telefoni · tablet", "Mac", "PC", "Ogni browser", "Il lavoro non si ferma", "Stessi dati, ogni schermo"],
+      hint: "Il vento del mulino muove il binario — passaci sopra per rallentarlo.",
+      hintTouch: "Trascina sul mulino — il binario accelera.",
+    },
     manifesto: {
-      kicker: "01 — Studio",
+      kicker: "02 — Studio",
       h2a: "Il software ",
       h2b: "macinato lentamente",
       h2c: " è il software che dura.",
@@ -95,7 +122,7 @@ const I18N = {
       ],
     },
     products: {
-      kicker: "02 — Prodotti",
+      kicker: "03 — Prodotti",
       h2a: "Un prodotto, ",
       h2b: "fatto bene.",
       sub: "Plough è il primo prodotto uscito dallo studio. Accanto ai prodotti sviluppiamo software enterprise su commessa — stesso banco, ordine diverso.",
@@ -108,8 +135,17 @@ const I18N = {
       desc: "Gestione delle attività per le piccole e medie imprese, costruita attorno a una linea che continua a muoversi. Ogni compito percorre il nastro — ingresso, lavorazione, controllo qualità — così tutta l’azienda vede cosa sta girando e cosa è pronto.",
       meta: ["v0.4 · Beta privata", "Desktop e mobile"],
     },
+    platforms: {
+      aria: "La stessa schermata di Plough disegnata in tre formati — telefono, tablet e desktop — con un compito che si sposta su tutti e tre insieme.",
+      cols: ["INGRESSO", "LAVORAZIONE", "CONTROLLO"],
+      benches: [
+        { key: "phone", label: "Telefono · 375 pt", t: "In tasca, in cantiere.", d: "Controlli la linea, sposti un compito, scatti una foto — tra un lavoro e l’altro." },
+        { key: "tablet", label: "Tablet · 768 pt", t: "Sul banco, in officina.", d: "Abbastanza grande per lavorarci, abbastanza leggero da portarlo alla macchina." },
+        { key: "desktop", label: "Desktop · 1440 px", t: "Alla scrivania, in ufficio.", d: "Tutta la linea in un colpo d’occhio: pianificazione, passaggi di consegne, report." },
+      ],
+    },
     contact: {
-      kicker: "03 — Contatti",
+      kicker: "04 — Contatti",
       h2a: "Scrivi al ",
       h2b: "mugnaio.",
       body: "Rispondiamo a tutto ciò che arriva a questo indirizzo. Pitch, domande, bollettini meteo.",

@@ -425,6 +425,7 @@ const Manifesto = () => {
       style={{
         padding: isMobile ? "88px 0 72px" : "140px 0 120px",
         position: "relative",
+        borderTop: "1px solid var(--rule)",
       }}
     >
       <div className="container">
@@ -436,10 +437,10 @@ const Manifesto = () => {
             alignItems: "start",
           }}
         >
-          <div style={isMobile ? {} : { position: "sticky", top: 120 }}>
+          <div style={isMobile ? {} : { alignSelf: "stretch", display: "flex", flexDirection: "column" }}>
             <div className="kicker">{t.manifesto.kicker}</div>
-            <div style={{ marginTop: 32 }}>
-              <AsciiMill />
+            <div style={{ marginTop: 32, flex: 1 }}>
+              <DriftingMill vertical={!isMobile} />
             </div>
           </div>
 

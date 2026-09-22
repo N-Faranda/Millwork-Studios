@@ -1,6 +1,6 @@
 // App composition + language state.
 
-const { Nav, Hero, Manifesto, Products, Contact, Footer, I18N, LangCtx } = window;
+const { Nav, Hero, Bench, Manifesto, Products, Contact, Footer, I18N, LangCtx } = window;
 
 const App = () => {
   // detect saved or browser lang
@@ -25,6 +25,7 @@ const App = () => {
     <LangCtx.Provider value={ctx}>
       <Nav />
       <Hero />
+      <Bench />
       <Manifesto />
       <Products />
       <Contact />

@@ -1,6 +1,10 @@
 // Interactive windmill: blades carry angular velocity, picked up from mouse motion.
 // Cursor proximity adds a passive torque (the wind). Pure SVG, transform on a <g>.
 
+// Shared read-out of the blades' angular velocity, so other parts of the page
+// (the tool rail) can move with the same wind.
+const MILL_WIND = { velocity: 0.6 };
+
 const Windmill = ({ size = 520, idleSpin = 0.08 }) => {
   const wrapRef = React.useRef(null);
   const bladeRef = React.useRef(null);
@@ -102,6 +106,7 @@ const Windmill = ({ size = 520, idleSpin = 0.08 }) => {
       s.velocity = Math.max(-30, Math.min(30, s.velocity));
 
       s.angle += s.velocity;
+      MILL_WIND.velocity = s.velocity;
       blade.setAttribute("transform", `rotate(${s.angle} 200 210)`);
 
       raf = requestAnimationFrame(tick);
@@ -225,4 +230,4 @@ const Windmill = ({ size = 520, idleSpin = 0.08 }) => {
   );
 };
 
-window.Windmill = Windmill;
+Object.assign(window, { Windmill, MILL_WIND });

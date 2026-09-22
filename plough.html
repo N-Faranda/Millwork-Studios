@@ -17,6 +17,8 @@
     --ink-mute: #7a766c;
     --ink-faint: #b8b3a6;
     --rule: rgba(17,17,16,0.12);
+    --rule-soft: rgba(17,17,16,0.06);
+    --accent: #b8451e;
     --sans: "Geist", ui-sans-serif, system-ui, sans-serif;
     --mono: "Geist Mono", ui-monospace, monospace;
     --serif: "Instrument Serif", "Times New Roman", serif;
@@ -107,68 +109,24 @@
   .btn-ghost { background: transparent; color: var(--ink); border-color: var(--rule); }
   .btn-ghost:hover { border-color: var(--ink); }
 
-  /* feature mock — task list visual */
-  .mock {
-    margin-top: 100px;
-    background: var(--ink); color: var(--paper);
-    padding: 56px; position: relative; overflow: hidden;
+  /* platforms figure — the same screen on phone, tablet and desktop */
+  .platforms { margin-top: 100px; }
+  .mw-sync, .mw-sync-dot { animation: mwSync 1.4s ease-out both; }
+  .mw-sync-dot { animation-name: mwSyncBg; }
+  .mw-travel { animation: mwTravel 0.9s cubic-bezier(0.65, 0, 0.35, 1) both; }
+  .mw-card-in { animation: mwCardIn 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+  @keyframes mwSync { 0%, 30% { fill: var(--accent); } 100% { fill: var(--ink-faint); } }
+  @keyframes mwSyncBg { 0%, 30% { background: var(--accent); } 100% { background: var(--ink-faint); } }
+  @keyframes mwTravel {
+    0% { transform: translateX(0); opacity: 0; }
+    15% { opacity: 1; }
+    85% { opacity: 1; }
+    100% { transform: translateX(var(--dx)); opacity: 0; }
   }
-  .mock-frame {
-    background: var(--paper); color: var(--ink);
-    border-radius: 12px; overflow: hidden;
-    box-shadow: 0 30px 60px -20px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.05) inset;
-    max-width: 1100px; margin: 0 auto;
+  @keyframes mwCardIn { from { transform: translateY(-6px); opacity: 0; } to { transform: none; opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) {
+    .mw-sync, .mw-sync-dot, .mw-travel, .mw-card-in { animation: none; }
   }
-  .mock-titlebar {
-    display: flex; align-items: center; gap: 8px;
-    padding: 14px 18px;
-    border-bottom: 1px solid var(--rule);
-    background: var(--paper-2);
-  }
-  .dot { width: 11px; height: 11px; border-radius: 50%; background: #d6cfbf; }
-  .mock-body { display: grid; grid-template-columns: 220px 1fr; min-height: 460px; }
-  .mock-side {
-    background: var(--paper-2);
-    border-right: 1px solid var(--rule);
-    padding: 22px 18px;
-    font-size: 13px;
-    display: flex; flex-direction: column; gap: 6px;
-  }
-  .side-section { color: var(--ink-mute); font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; margin: 14px 6px 6px; }
-  .side-item { padding: 7px 10px; border-radius: 6px; color: var(--ink-soft); display: flex; justify-content: space-between; }
-  .side-item.active { background: var(--ink); color: var(--paper); }
-  .side-item .count { opacity: 0.55; font-family: var(--mono); font-size: 11px; }
-  .mock-main { padding: 28px 32px; }
-  .mock-h {
-    display: flex; align-items: baseline; justify-content: space-between;
-    margin-bottom: 22px;
-  }
-  .mock-h h3 { font-weight: 400; font-size: 22px; letter-spacing: -0.015em; }
-  .mock-h .date { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: var(--ink-mute); text-transform: uppercase; }
-  .task {
-    display: grid; grid-template-columns: 24px 1fr 80px 90px 80px;
-    align-items: center; gap: 14px;
-    padding: 14px 4px; border-bottom: 1px solid var(--rule);
-    font-size: 14px;
-  }
-  .task .check {
-    width: 17px; height: 17px; border-radius: 50%; border: 1.5px solid var(--ink-mute);
-    display: flex; align-items: center; justify-content: center;
-  }
-  .task.done .check { background: var(--ink); border-color: var(--ink); }
-  .task.done .check::after {
-    content: ""; width: 8px; height: 4px;
-    border-left: 1.5px solid var(--paper); border-bottom: 1.5px solid var(--paper);
-    transform: rotate(-45deg) translate(1px, -1px);
-  }
-  .task.done .title { color: var(--ink-mute); text-decoration: line-through; text-decoration-thickness: 1px; }
-  .task .tag {
-    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.08em;
-    text-transform: uppercase; color: var(--ink-mute);
-    padding: 3px 8px; border: 1px solid var(--rule); justify-self: start;
-  }
-  .task .owner { font-family: var(--mono); font-size: 11px; color: var(--ink-mute); letter-spacing: 0.08em; }
-  .task .due { font-family: var(--mono); font-size: 11px; color: var(--ink-mute); letter-spacing: 0.08em; text-align: right; }
 
   /* features */
   .features { padding: 140px 0; border-bottom: 1px solid var(--rule); }
@@ -408,8 +366,6 @@
     .hero .meta-grid { grid-template-columns: repeat(2, 1fr); }
     .feat-grid, .pricing-grid { grid-template-columns: 1fr; }
     .feat { border-right: none; }
-    .mock-body { grid-template-columns: 1fr; }
-    .mock-side { display: none; }
   }
 
   /* phones */
@@ -426,15 +382,7 @@
     .cta-row .btn { width: 100%; justify-content: center; padding: 15px 18px; }
     .hero .meta-grid { margin-top: 40px; grid-template-columns: 1fr 1fr; gap: 20px; }
 
-    /* the product mock is a picture of the app — let it shrink, not scroll */
-    .mock { margin-top: 56px; padding: 20px 14px; }
-    .mock-frame { border-radius: 8px; }
-    .mock-titlebar { padding: 11px 14px; }
-    .mock-body { min-height: 0; }
-    .mock-main { padding: 20px 16px; }
-    .mock-h { flex-direction: column; align-items: flex-start; gap: 6px; }
-    .task { grid-template-columns: 20px 1fr auto; gap: 10px; padding: 12px 2px; }
-    .task .tag, .task .owner { display: none; }
+    .platforms { margin-top: 56px; }
 
     .features { padding: 80px 0; }
     .features .head { gap: 24px; margin-bottom: 48px; }
@@ -525,90 +473,8 @@
       </div>
     </div>
 
-    <!-- product visual mock -->
-    <div class="mock">
-      <div class="mock-frame">
-        <div class="mock-titlebar">
-          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-          <span style="margin-left: 14px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute);">Plough — Forno Bertelli · Today</span>
-        </div>
-        <div class="mock-body">
-          <aside class="mock-side">
-            <div class="side-section">Today</div>
-            <div class="side-item active"><span>The line</span><span class="count">7</span></div>
-            <div class="side-item"><span>Calendar</span><span class="count">3</span></div>
-            <div class="side-item"><span>Inbox</span><span class="count">12</span></div>
-
-            <div class="side-section">Products</div>
-            <div class="side-item"><span>Bakery</span><span class="count">22</span></div>
-            <div class="side-item"><span>Wholesale</span><span class="count">8</span></div>
-            <div class="side-item"><span>Renovation</span><span class="count">14</span></div>
-
-            <div class="side-section">Team</div>
-            <div class="side-item"><span>Anna</span><span class="count">4</span></div>
-            <div class="side-item"><span>Marco</span><span class="count">5</span></div>
-            <div class="side-item"><span>Giulia</span><span class="count">3</span></div>
-          </aside>
-
-          <main class="mock-main">
-            <div class="mock-h">
-              <h3>The line <em class="serif" style="color: var(--ink-mute);">— Monday</em></h3>
-              <span class="date">11 May 2026 · 7 open</span>
-            </div>
-
-            <div class="task done">
-              <div class="check"></div>
-              <div class="title">Order rye flour — 60kg</div>
-              <span class="tag">Bakery</span>
-              <span class="owner">Anna</span>
-              <span class="due">Done 07:14</span>
-            </div>
-            <div class="task">
-              <div class="check"></div>
-              <div class="title">Call the carpenter about counter height</div>
-              <span class="tag">Renovation</span>
-              <span class="owner">Marco</span>
-              <span class="due">By 11:00</span>
-            </div>
-            <div class="task">
-              <div class="check"></div>
-              <div class="title">Reply to Cascina Verde — wholesale terms</div>
-              <span class="tag">Wholesale</span>
-              <span class="owner">Giulia</span>
-              <span class="due">Today</span>
-            </div>
-            <div class="task">
-              <div class="check"></div>
-              <div class="title">Photograph new pastry case for the menu</div>
-              <span class="tag">Bakery</span>
-              <span class="owner">Anna</span>
-              <span class="due">Today</span>
-            </div>
-            <div class="task done">
-              <div class="check"></div>
-              <div class="title">Confirm Friday delivery window</div>
-              <span class="tag">Wholesale</span>
-              <span class="owner">Giulia</span>
-              <span class="due">Done 08:02</span>
-            </div>
-            <div class="task">
-              <div class="check"></div>
-              <div class="title">Quality check — Saturday pastry batch</div>
-              <span class="tag">Bakery</span>
-              <span class="owner">Marco</span>
-              <span class="due">Wed</span>
-            </div>
-            <div class="task" style="border-bottom: none;">
-              <div class="check"></div>
-              <div class="title">Pay the electrician’s second invoice</div>
-              <span class="tag">Renovation</span>
-              <span class="owner">You</span>
-              <span class="due">Fri</span>
-            </div>
-          </main>
-        </div>
-      </div>
-    </div>
+    <!-- the same screen on every bench — rendered by src/platforms.jsx -->
+    <div class="platforms" id="platforms-root"></div>
   </div>
 </section>
 
@@ -1103,6 +969,22 @@
       }
     });
   })();
+</script>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="src/i18n.jsx"></script>
+<script type="text/babel" src="src/responsive.jsx"></script>
+<script type="text/babel" src="src/platforms.jsx"></script>
+<script type="text/babel">
+  // This page is English-only, so the figure gets the English copy.
+  ReactDOM.createRoot(document.getElementById("platforms-root")).render(
+    <LangCtx.Provider value={{ lang: "en", t: I18N.en, setLang: () => {} }}>
+      <PlatformsFigure />
+    </LangCtx.Provider>
+  );
 </script>
 
 </body>
