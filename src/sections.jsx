@@ -132,39 +132,42 @@ const Nav = () => {
 };
 
 // Hamburger that folds into a cross when the drawer is open.
-const MenuButton = ({ open, onClick }) => (
-  <button
-    onClick={onClick}
-    aria-label={open ? "Close menu" : "Open menu"}
-    aria-expanded={open}
-    style={{
-      width: 40,
-      height: 40,
-      marginRight: -8,
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      gap: 5,
-    }}
-  >
-    {[0, 1].map((i) => (
-      <span
-        key={i}
-        style={{
-          display: "block",
-          width: 20,
-          height: 1.5,
-          background: "var(--ink)",
-          transition: "transform 0.3s ease",
-          transform: open
-            ? `translateY(${i === 0 ? 3.25 : -3.25}px) rotate(${i === 0 ? 45 : -45}deg)`
-            : "none",
-        }}
-      />
-    ))}
-  </button>
-);
+const MenuButton = ({ open, onClick }) => {
+  const { t } = useT();
+  return (
+    <button
+      onClick={onClick}
+      aria-label={open ? t.nav.closeMenu : t.nav.openMenu}
+      aria-expanded={open}
+      style={{
+        width: 40,
+        height: 40,
+        marginRight: -8,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 5,
+      }}
+    >
+      {[0, 1].map((i) => (
+        <span
+          key={i}
+          style={{
+            display: "block",
+            width: 20,
+            height: 1.5,
+            background: "var(--ink)",
+            transition: "transform 0.3s ease",
+            transform: open
+              ? `translateY(${i === 0 ? 3.25 : -3.25}px) rotate(${i === 0 ? 45 : -45}deg)`
+              : "none",
+          }}
+        />
+      ))}
+    </button>
+  );
+};
 
 const NavLink = ({ href, children, onClick }) => (
   <a
@@ -240,9 +243,9 @@ const Hero = () => {
 
   const annotations = (
     <React.Fragment>
-      <div style={annotStyle(isMobile, "left")}>FIG. 01 — MILL, IN SECTION</div>
+      <div style={annotStyle(isMobile, "left")}>{t.hero.fig}</div>
       <div style={annotStyle(isMobile, "right")}>
-        {isTouch ? "INTERACTIVE — DRAG" : "INTERACTIVE — MOVE CURSOR"}
+        {isTouch ? t.hero.interactiveTouch : t.hero.interactive}
       </div>
     </React.Fragment>
   );

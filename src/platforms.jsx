@@ -310,14 +310,14 @@ const PlatformsFigure = () => {
             color: "var(--ink-mute)",
           }}
         >
-          <span>FIG. 01 — ONE TOOL, THREE BENCHES</span>
+          <span>{p.fig}</span>
           <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
             <span
               key={step}
               className="mw-sync-dot"
               style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--ink-faint)" }}
             />
-            SYNCED — SAME DATA, EVERY SCREEN
+            {p.synced}
           </span>
         </figcaption>
       </figure>

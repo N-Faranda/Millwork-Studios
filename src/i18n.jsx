@@ -1,7 +1,7 @@
 // Italian / English dictionary
 const I18N = {
   en: {
-    nav: { products: "Products", studio: "Studio", contact: "Contact" },
+    nav: { products: "Products", studio: "Studio", contact: "Contact", openMenu: "Open menu", closeMenu: "Close menu" },
     hero: {
       kicker: "Millwork Studios · est. 2025 · Independent software studio",
       h1a: "We build",
@@ -12,6 +12,9 @@ const I18N = {
       sub: "A studio of engineering turning the quiet, repetitive work of a company into software that grows with it.",
       hint: "Move your cursor — the wind moves with you.",
       hintTouch: "Drag across the mill — the wind follows your finger.",
+      fig: "FIG. 01 — MILL, IN SECTION",
+      interactive: "INTERACTIVE — MOVE CURSOR",
+      interactiveTouch: "INTERACTIVE — DRAG",
     },
     bench: {
       kicker: "01 — Platforms",
@@ -27,6 +30,9 @@ const I18N = {
       h2a: "Software, ",
       h2b: "milled slowly,",
       h2c: " is software that lasts.",
+      fig: "fig.II — mill, in motion",
+      wind: "wind",
+      kt: "kt",
       body: [
         "Millwork Studios is a small, independent software studio. We choose few problems and we stay with them.",
         "We are interested in the unglamorous parts of running a small business — the lists, the handovers, the days that look like the day before. We think these are worth building for, carefully.",
@@ -55,6 +61,8 @@ const I18N = {
     platforms: {
       aria: "The same Plough screen drawn at three sizes — phone, tablet and desktop — with one task moving across all three at once.",
       cols: ["INTAKE", "WORK", "QC"],
+      fig: "FIG. 01 — ONE TOOL, THREE BENCHES",
+      synced: "SYNCED — SAME DATA, EVERY SCREEN",
       benches: [
         { key: "phone", label: "Phone · 375 pt", t: "In the pocket, on site.", d: "Check the line, move a task, snap a photo — between one job and the next." },
         { key: "tablet", label: "Tablet · 768 pt", t: "On the bench, in the workshop.", d: "Big enough to work on, light enough to carry to the machine." },
@@ -84,7 +92,7 @@ const I18N = {
     },
   },
   it: {
-    nav: { products: "Prodotti", studio: "Studio", contact: "Contatti" },
+    nav: { products: "Prodotti", studio: "Studio", contact: "Contatti", openMenu: "Apri menu", closeMenu: "Chiudi menu" },
     hero: {
       kicker: "Millwork Studios · fondato 2025 · Studio software indipendente",
       h1a: "Costruiamo",
@@ -95,6 +103,9 @@ const I18N = {
       sub: "Uno studio di ingegneria che trasforma il lavoro silenzioso e ripetitivo di un’azienda in software che cresce con lei.",
       hint: "Muovi il cursore — il vento si muove con te.",
       hintTouch: "Trascina sul mulino — il vento segue il dito.",
+      fig: "FIG. 01 — MULINO, IN SEZIONE",
+      interactive: "INTERATTIVO — MUOVI IL CURSORE",
+      interactiveTouch: "INTERATTIVO — TRASCINA",
     },
     bench: {
       kicker: "01 — Piattaforme",
@@ -110,6 +121,9 @@ const I18N = {
       h2a: "Il software ",
       h2b: "macinato lentamente",
       h2c: " è il software che dura.",
+      fig: "fig.II — mulino, in moto",
+      wind: "vento",
+      kt: "nodi",
       body: [
         "Millwork Studios è un piccolo studio software indipendente. Scegliamo pochi problemi e ci restiamo dentro.",
         "Ci interessano le parti meno appariscenti di un’impresa — le liste, i passaggi di consegne, le giornate che assomigliano a quella prima. Crediamo che valga la pena costruirci sopra, con cura.",
@@ -138,6 +152,8 @@ const I18N = {
     platforms: {
       aria: "La stessa schermata di Plough disegnata in tre formati — telefono, tablet e desktop — con un compito che si sposta su tutti e tre insieme.",
       cols: ["INGRESSO", "LAVORAZIONE", "CONTROLLO"],
+      fig: "FIG. 01 — UNO STRUMENTO, TRE BANCHI",
+      synced: "SINCRONIZZATO — STESSI DATI, OGNI SCHERMO",
       benches: [
         { key: "phone", label: "Telefono · 375 pt", t: "In tasca, in cantiere.", d: "Controlli la linea, sposti un compito, scatti una foto — tra un lavoro e l’altro." },
         { key: "tablet", label: "Tablet · 768 pt", t: "Sul banco, in officina.", d: "Abbastanza grande per lavorarci, abbastanza leggero da portarlo alla macchina." },

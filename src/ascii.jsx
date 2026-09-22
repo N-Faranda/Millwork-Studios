@@ -73,6 +73,7 @@ const windFor = (theta) => {
 // gustRef (optional) adds rad/sec on top of the idle spin — the drifting
 // wrapper below feeds it with scroll speed.
 const AsciiMill = ({ gustRef }) => {
+  const { t } = useT();
   const [theta, setTheta] = React.useState(0);
   const [hover, setHover] = React.useState(false);
   const thetaRef = React.useRef(0);
@@ -119,7 +120,7 @@ const AsciiMill = ({ gustRef }) => {
           maxWidth: 280,
         }}
       >
-        <span>fig.II — mill, in motion</span>
+        <span>{t.manifesto.fig}</span>
         <span>{w.deg}</span>
       </div>
       <pre
@@ -148,8 +149,8 @@ const AsciiMill = ({ gustRef }) => {
           maxWidth: 280,
         }}
       >
-        <span>wind {w.dir}</span>
-        <span>{w.kt} kt</span>
+        <span>{t.manifesto.wind} {w.dir}</span>
+        <span>{w.kt} {t.manifesto.kt}</span>
       </div>
     </div>
   );

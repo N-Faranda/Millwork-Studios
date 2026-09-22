@@ -3,14 +3,13 @@
 const { Nav, Hero, Bench, Manifesto, Products, Contact, Footer, I18N, LangCtx } = window;
 
 const App = () => {
-  // detect saved or browser lang
+  // English unless the visitor has already picked a language
   const [lang, setLangState] = React.useState(() => {
     try {
       const saved = localStorage.getItem("mw_lang");
       if (saved === "en" || saved === "it") return saved;
     } catch (e) {}
-    const nav = (navigator.language || "en").toLowerCase();
-    return nav.startsWith("it") ? "it" : "en";
+    return "en";
   });
   const setLang = (l) => {
     setLangState(l);
