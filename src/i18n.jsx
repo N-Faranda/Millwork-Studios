@@ -23,7 +23,7 @@ const I18N = {
       sub: "An independent software house: we make our own tools and bring them to every screen people work on — phone, tablet, computer, browser.",
       captions: ["iPhone · iPad", "Phones · tablets", "Mac", "PC", "Any browser", "Work doesn’t stop", "Same data, every screen"],
       hint: "The mill’s wind drives the rail — hover to slow it down.",
-      hintTouch: "Drag across the mill — the rail picks up speed.",
+      hintTouch: "The breeze keeps the tools swinging — scroll to raise the wind.",
     },
     manifesto: {
       kicker: "02 — Studio",
@@ -114,7 +114,7 @@ const I18N = {
       sub: "Una software house indipendente: costruiamo i nostri strumenti e li portiamo su ogni schermo su cui si lavora — telefono, tablet, computer, browser.",
       captions: ["iPhone · iPad", "Telefoni · tablet", "Mac", "PC", "Ogni browser", "Il lavoro non si ferma", "Stessi dati, ogni schermo"],
       hint: "Il vento del mulino muove il binario — passaci sopra per rallentarlo.",
-      hintTouch: "Trascina sul mulino — il binario accelera.",
+      hintTouch: "La brezza fa oscillare gli attrezzi — scorri per alzare il vento.",
     },
     manifesto: {
       kicker: "02 — Studio",

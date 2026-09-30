@@ -2,6 +2,7 @@
 // A strip of workshop tools hanging from a rail, each one a platform the
 // studio builds for. The rail slides like a marquee; its speed follows the
 // windmill in the hero (MILL_WIND), and the tools lean back as it speeds up.
+// On phones and touch screens the rail also has its own gusting breeze.
 
 const { useT, useIsMobile, useIsTouch, useMediaQuery, MILL_WIND } = window;
 
@@ -172,18 +173,32 @@ const Bench = () => {
       return;
     }
 
+    const ownWind = isMobile || isTouch;
     let raf = null;
     let last = performance.now();
     let offset = 0;
     let speed = 40; // px/s
     let lean = 0; // degrees
+    let lastScroll = window.scrollY;
+    let scrollV = 0; // px/s, smoothed
 
     const tick = (now) => {
       const dt = Math.min(50, now - last) / 1000;
       last = now;
+      const tSec = now / 1000;
 
       // idle drift plus whatever the mill is doing; hovering slows it to read
-      const wind = Math.min(8, Math.abs((MILL_WIND && MILL_WIND.velocity) || 0));
+      let wind = Math.min(8, Math.abs((MILL_WIND && MILL_WIND.velocity) || 0));
+      if (ownWind) {
+        // on a phone the mill has scrolled away by the time the rail is on
+        // screen, so the rail keeps its own weather: slow gusts plus scroll speed
+        const y = window.scrollY;
+        if (dt > 0) scrollV += ((y - lastScroll) / dt - scrollV) * Math.min(1, dt * 4);
+        lastScroll = y;
+        const g = Math.sin(tSec * 0.35) + Math.sin(tSec * 0.83 + 1.3) * 0.6 + Math.sin(tSec * 1.9 + 0.4) * 0.25;
+        const breeze = 0.6 + Math.max(0, g) * 1.1 + Math.min(3, Math.abs(scrollV) / 500);
+        wind = Math.max(wind, breeze);
+      }
       let target = 36 + wind * 70;
       if (hoverRef.current) target *= 0.2;
       speed += (target - speed) * Math.min(1, dt * 2.5);
@@ -195,10 +210,10 @@ const Bench = () => {
       // tools trail the rail: lean back with speed, plus a slow sway of their own
       const targetLean = Math.min(14, (speed - 36) * 0.045);
       lean += (targetLean - lean) * Math.min(1, dt * 3);
-      const tSec = now / 1000;
+      const swayBase = ownWind ? 2.4 : 1.2;
       toolRefs.current.forEach((g, i) => {
         if (!g) return;
-        const sway = Math.sin(tSec * 1.4 + i * 1.7) * (1.2 + lean * 0.15);
+        const sway = Math.sin(tSec * 1.4 + i * 1.7) * (swayBase + lean * 0.15);
         // the rail runs left, so a trailing tool swings its foot to the right (negative angle)
         g.setAttribute("transform", `rotate(${(sway - lean).toFixed(2)} 30 -2)`);
       });
@@ -210,6 +225,7 @@ const Bench = () => {
     const io = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting && raf === null) {
         last = performance.now();
+        lastScroll = window.scrollY;
         raf = requestAnimationFrame(tick);
       } else if (!entry.isIntersecting && raf !== null) {
         cancelAnimationFrame(raf);
@@ -222,7 +238,7 @@ const Bench = () => {
       io.disconnect();
       if (raf !== null) cancelAnimationFrame(raf);
     };
-  }, [reduced, isMobile]);
+  }, [reduced, isMobile, isTouch]);
 
   const group = (copy) => (
     <div ref={copy === 0 ? groupRef : null} style={{ display: "flex", flexShrink: 0 }} aria-hidden={copy === 1 ? "true" : undefined}>

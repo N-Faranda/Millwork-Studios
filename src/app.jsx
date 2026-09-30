@@ -40,6 +40,29 @@ const mount = () => {
     const s = document.getElementById("splash");
     if (s) s.classList.add("hidden");
   }, 80);
+  scrollToHash();
+};
+
+// Links from other pages (e.g. plough.html → index.html#contact) arrive before
+// React has rendered the target, so the browser can't jump there on its own.
+const scrollToHash = () => {
+  const id = decodeURIComponent(window.location.hash.slice(1));
+  if (!id) return;
+  const jump = () => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: "instant", block: "start" });
+    return !!el;
+  };
+  let tries = 0;
+  const wait = () => {
+    if (jump()) {
+      // fonts landing late can shift the layout — settle once more
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(jump);
+    } else if (++tries < 60) {
+      setTimeout(wait, 50);
+    }
+  };
+  wait();
 };
 
 if (document.readyState === "loading") {
